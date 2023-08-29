@@ -16,7 +16,7 @@ export default function Home() {
       <h1 className=''>
       <Link href='/mynew'>
       <h2>
-        Horror
+        Main Page 
       </h2>
       </Link>
       </h1>

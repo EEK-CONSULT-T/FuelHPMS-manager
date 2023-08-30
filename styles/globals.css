@@ -11,15 +11,20 @@
 
   .sidebar-tooltip {
     @apply absolute w-auto px-5 p-5 m-2 min-w-max left-14 rounded-md shadow-md
-    text-white bg-light-blue-400
-    text-xs font-bold 
-    transition-all duration-100 scale-0 origin-left;
+    text-white bg-light-blue-400 text-xs font-bold scale-0
+    transition-all duration-300 origin-left;
   }
 
   .sidebar-hr {
     @apply bg-light-blue-800 dark:bg-gray-800 
     border border-light-blue-800 dark:border-gray-800 rounded-full
     mx-2 mt-3 mb-3;
+  }
+
+  .sidebar-caret {
+    @apply absolute w-auto px-5 p-5 min-w-max left-14
+    text-light-blue-400 font-bold z-10 -m-6 scale-0
+    transition-all duration-100 origin-left;
   }
 
 
@@ -39,6 +44,32 @@
 
   .overview-box {
     @apply bg-white mx-2 my-1 px-4 py-4 rounded-xl hover:scale-105 hover:bg-gray-50 hover:border-2 hover:border-gray-200 shadow-lg border border-gray-100;
+    transition: all .2s ease-in-out;
+  }
+
+  .user-regform {
+    @apply bg-gray-100 p-3 rounded-lg;
+  }
+
+  .user-regform input, .user-regform select {
+    @apply w-96 border border-gray-200 placeholder:font-light text-gray-800 text-sm px-5 py-3 mx-2 my-1 rounded-md focus:outline focus:outline-2 focus:outline-gray-900
+    shadow-sm;
+  }
+
+  .p-label {
+    @apply text-xs text-gray-500 mt-2 mx-7 tracking-wide;
+  }
+
+  .user-regform h2 {
+    @apply text-gray-900 m-3 mb-0 text-2xl font-semibold;
+  }
+
+  .subheader {
+    @apply mx-3 mb-10 text-sm text-gray-600 font-light tracking-wide;
+  }
+
+  .full-button {
+    @apply bg-gray-900 mx-2 my-4 p-2 w-96 rounded-lg text-white hover:bg-gray-800 hover:scale-105;
     transition: all .2s ease-in-out;
   }
 

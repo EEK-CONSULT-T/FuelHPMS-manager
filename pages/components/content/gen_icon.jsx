@@ -1,5 +1,5 @@
 
-const GenIcon = ({ icon, color }) => (
+const GenIcon = ({ icon }) => (
     <div>{icon}</div>
 );
 

@@ -1,5 +1,6 @@
-import { BsPersonLinesFill, BsPersonWorkspace, BsHouseFill, BsCapsule, BsGearWideConnected } from 'react-icons/bs';
+import { BsPersonLinesFill, BsPersonWorkspace, BsHouseFill, BsCapsule, BsGearWideConnected, BsCaretLeft, BsCaretLeftFill } from 'react-icons/bs';
 import { FaHouseUser, FaHourglassEnd, FaListAlt } from 'react-icons/fa';
+import MyIcon from './content/gen_icon'
 
 const SideBar = () => {
     return (
@@ -25,7 +26,10 @@ const SidebarIcon = ({ icon, text = 'tooltip' }) => (
     <div className="sidebar-icon group">
         {icon}
 
-        <span className="sidebar-tooltip group-hover:scale-100 tracking-widest font-normal uppercase">
+        <span className="sidebar-caret group-hover:scale-100">
+            <MyIcon icon={<BsCaretLeftFill size="24"/>} />
+        </span>
+        <span className="sidebar-tooltip group-hover:scale-100 tracking-widest font-normal uppercase clear-both">
             {text}
         </span>
     </div>

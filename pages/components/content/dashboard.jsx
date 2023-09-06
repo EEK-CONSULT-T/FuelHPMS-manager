@@ -1,12 +1,13 @@
 import GenIcon from "./gen_icon";
-import { BsPencilSquare, BsGearFill, BsBellFill, BsCaretDownFill, BsPersonFillGear, BsPersonVcardFill, BsFileText, BsFileTextFill, BsPersonVcard } from 'react-icons/bs';
-import { FaHouseUser, FaUsers, FaUsersCog } from 'react-icons/fa';
+import { BsPencilSquare, BsGearFill, BsBellFill, BsCaretDownFill, BsPersonFillGear, BsPersonVcardFill, BsFileText, BsFileTextFill, BsPersonVcard, BsCalendar2Check, BsExclamationTriangleFill, BsExclamationTriangle } from 'react-icons/bs';
+import { FaCalendarCheck, FaExclamationTriangle, FaHouseUser, FaPrint, FaUsers, FaUsersCog } from 'react-icons/fa';
 
 const DashOverview = () => {
+    // bg-[url('/img/hero-pattern.svg')]
     return (
         <div className="mx-3 my-3 px-2 py-4 border border-gray-200 rounded-lg overflow-hidden">
             <div className="flex flex-row"> 
-                <div className="overview-box basis-1/4 relative bg-[url('/img/hero-pattern.svg')]">
+                <div className="overview-box basis-1/4 relative">
                     <GenIcon icon={<BsPersonVcard size="70" className="text-light-blue-400 p-1 border-none mb-2"/>}/>
                     <p className="text-gray-600 font-light tracking-wide text-sm">Welcome</p>
                     <h2 className="text-blue-gray-800 text-xl font-medium">John Doe</h2>
@@ -18,11 +19,13 @@ const DashOverview = () => {
                         &nbsp;Edit Profile
                     </button>
                 </div>
+
                 <div className="overview-box basis-1/4">
                     <GenIcon icon={<FaUsersCog size="70" className="text-teal-400 mb-2"/>}/>
                     <h2 className="text-blue-gray-800 text-xl font-medium">System Users</h2>
                     <p className="text-gray-500 font-light tracking-wide text-sm">25 Active</p>
                 </div>
+
                 <div className="overview-box basis-1/2">
                     <div className="flex flex-row bg-gray-100 px-3 pt-4 pb-1 rounded-md border border-gray-200 hover:bg-gray-200">
                         <GenIcon icon={<BsFileText size="50" className="text-pink-500 mb-2 mr-2"/>}/>
@@ -30,6 +33,24 @@ const DashOverview = () => {
                             <p className="text-gray-500 font-light tracking-wide text-sm">Generate Reports Here</p>
                         </h2>
                     </div>
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td className="w-2">
+                                    <GenIcon icon={<BsCalendar2Check size="20" className="text-red-500"/>}/>
+                                </td>
+                                <td>Aug, 2023 <p>NOT PAID</p></td>
+                                <td className="text-center"><GenIcon icon={<FaExclamationTriangle size="34" className="text-yellow-700 border border-gray-300 rounded-md p-2 hover:bg-gray-200"/>}/></td>
+                            </tr>
+                            <tr>
+                                <td className="w-2">
+                                    <GenIcon icon={<BsCalendar2Check size="20" className="text-teal-400"/>}/>
+                                </td>
+                                <td>Aug, 2023 <p>NOT PAID</p></td>
+                                <td className="text-center"><GenIcon icon={<FaPrint size="34" className="text-gray-800 border border-gray-300 rounded-md p-2 hover:bg-gray-200"/>}/></td>
+                            </tr>
+                        </tbody>
+                    </table>
                     
                     {/* <GenIcon icon={<BsFileTextFill size="50" className="text-pink-500 mb-2"/>}/>
                     <h2 className="text-blue-gray-800 text-xl font-medium">System Report</h2>

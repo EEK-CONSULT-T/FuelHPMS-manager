@@ -1,5 +1,6 @@
+import Link from 'next/link'
 import { BsPersonLinesFill, BsPersonWorkspace, BsHouseFill, BsCapsule, BsGearWideConnected, BsCaretLeft, BsCaretLeftFill } from 'react-icons/bs';
-import { FaHouseUser, FaHourglassEnd, FaListAlt } from 'react-icons/fa';
+import { FaHouseUser, FaHourglassEnd, FaListAlt, FaTruck } from 'react-icons/fa';
 import MyIcon from './content/gen_icon'
 
 const SideBar = () => {
@@ -10,14 +11,14 @@ const SideBar = () => {
             <i>3</i>
             <i>4</i>
             <i>5</i> */}
-            <SidebarIcon icon={<BsHouseFill size="24"/>} text='Home' />
+            <Link href="/"><SidebarIcon icon={<BsHouseFill size="22"/>} text='Home' /></Link>
             <Divider />
-            <SidebarIcon icon={<BsPersonLinesFill size="22"/>} text='Employee' />
+            <Link href="/employee"><SidebarIcon icon={<BsPersonLinesFill size="22"/>} text='Employee' /></Link>
+            <Link href="/waybill"><SidebarIcon icon={<FaTruck size="22"/>} text='Waybill' /></Link>
             <SidebarIcon icon={<FaListAlt size="22"/>} text='Records' />
-            <SidebarIcon icon={<BsCapsule size="20"/>} text='Home' />
-            <SidebarIcon icon={<BsHouseFill size="20"/>} text='Home' />
+            <SidebarIcon icon={<BsHouseFill size="22"/>} text='Home' />
             {/* <Divider /> */}
-            <SidebarIcon icon={<BsGearWideConnected size="20"/>} text='Settings' />
+            <SidebarIcon icon={<BsGearWideConnected size="22"/>} text='Settings' />
         </div>
     );
 };

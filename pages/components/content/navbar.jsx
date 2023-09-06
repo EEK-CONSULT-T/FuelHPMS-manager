@@ -3,8 +3,8 @@ import { FaThLarge } from 'react-icons/fa';
 
 const NavBar = () => {
     return (
-        <div className="w-full bg-gray-200 px-3 pt-3 pb-4 border-b-2 border-light-blue-400">
-            <h3 className="header-text">Dashboard</h3>
+        <div className="w-full h-12 bg-gray-200 px-3 py-2 border-b-2 border-light-blue-400">
+            <h3 className="header-text float-left">Dashboard</h3>
             {/* <MyIcon icon={<FaThLarge size="18"/>} text='Notivication' /> */}
             {/* <nav className="flex sm:justify-center space-x-4">
             {[
@@ -17,17 +17,17 @@ const NavBar = () => {
             ))}
             </nav> */}
             {/* <a href="#">User</a> */}
-            {/* <div className="bg-light-blue-200 w-auto flex flex-row-reverse"> */}
-            <div className="w-auto flex flex-row-reverse">
+            {/* <div className="bg-light-blue-200 py-1 w-auto flex flex-row-reverse float-right"> */}
+            <div className="w-auto py-1 flex flex-row-reverse">
                 {/* <NavbarIcon icon={<BsPencilSquare size="20"/>} text='Edit' /> */}
-                <div className="mx-3 w-15 h-8 flex my-2 hover:bg-gray-300 shadow-lg rounded-3xl">
+                <div className="mx-3 w-15 h-6 flex hover:bg-white shadow-lg rounded-3xl">
                     <img src="https://img.freepik.com/premium-photo/business-woman-pointing-copyspace-isolated-white-wall_396254-76.jpg" alt=""
-                    className="w-8 h-8 rounded-3xl border-solid border-2 border-gray-500" />
-                    <MyIcon icon={<BsCaretDownFill size="15"/>} text='Settings' />
+                    className="w-6 h-6 rounded-3xl border-solid border-2 border-gray-500" />
+                    <MyIcon icon={<BsCaretDownFill size="13"/>} text='Settings' />
                 </div>
-                <NavbarIcon icon={<BsGearFill size="18"/>} text='Settings' />
-                <NavbarIcon icon={<BsBellFill size="18"/>} text='Notivication' />
-                <input type="text" placeholder="Search" className="mx-2 my-1 px-5 rounded-3xl h-10 outline-none"/>
+                <NavbarIcon icon={<BsGearFill size="15"/>} text='Settings' />
+                <NavbarIcon icon={<BsBellFill size="15"/>} text='Notivication' />
+                {/* <input type="text" placeholder="Search" className="mx-2 my-1 px-5 rounded-3xl h-10 outline-none"/> */}
             </div>
             
         </div>

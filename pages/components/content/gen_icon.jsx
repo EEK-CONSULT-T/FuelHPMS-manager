@@ -1,6 +1,8 @@
 
-const GenIcon = ({ icon }) => (
-    <div>{icon}</div>
-);
+const GenIcon = ({ icon }) => {
+    return (
+        <div>{icon}</div>
+    );
+};
 
 export default GenIcon;

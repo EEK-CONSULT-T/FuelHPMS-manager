@@ -1,7 +1,7 @@
 
-const GenIcon = ({ icon }) => {
+const GenIcon = ({ icon, text, className }) => {
     return (
-        <div>{icon}</div>
+        <div className={className}><h2>{icon}{text}</h2></div>
     );
 };
 

@@ -23,7 +23,7 @@
 
   .sidebar-caret {
     @apply absolute w-auto px-5 p-5 min-w-max left-14
-    text-light-blue-400 font-bold z-10 -m-6 scale-0
+    text-light-blue-400 font-bold z-10 -ml-6 scale-0
     transition-all duration-100 origin-left;
   }
 
@@ -94,7 +94,7 @@
   }
 
   .user-viewform {
-    @apply basis-2/3 pl-5;
+    @apply pl-0;
   }
 
   .flow-row-col {
@@ -140,8 +140,9 @@
     @apply border-b border-gray-300 mt-1 mb-5 pb-0 font-light flex text-gray-600;
   }
 
-  .text-links-container p {
-    @apply px-3 py-1 text-sm hover:bg-white hover:rounded-sm hover:border-white hover:border-b-4;
+  .text-links-container p, .menu-text {
+    @apply px-3 py-1 text-sm hover:bg-white hover:rounded-sm hover:border-none hover:border-b-4 hover:scale-100 hover:shadow-lg;
+    transition: all .2s ease-in-out;
   }
 
   .active-tlink {
@@ -149,7 +150,7 @@
   }
 
   .white-card {
-    @apply bg-white p-7 pb-12 rounded-2xl my-4 shadow;
+    @apply h-full bg-white p-7 pb-12 rounded-2xl my-4 shadow;
   }
 
   .white-card h3 {

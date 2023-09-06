@@ -15,13 +15,7 @@ const Waybill = () => {
     return (
         <div>
             <SideBar />
-            {/* <ContentCont component={[<NavBar />, <WayLayout />]}/> */}
-            <div className="flex">
-                <div className="content-container">
-                    <NavBar />
-                    <WayLayout />
-                </div>
-            </div>
+            <ContentCont component={[<NavBar />, <WayLayout />]}/>
         </div>
     );
 };
@@ -52,15 +46,15 @@ const WayLayout = () => {
                     <div className="flex">
                         <div className="input-container w-1/3">
                             <h4>Driver's Name</h4>
-                            <input id="" type="text" placeholder="eg. John Doe"/>
+                            <input type="text" placeholder="eg. John Doe"/>
                         </div>
                         <div className="input-container w-1/3">
                             <h4>Driver's Contact</h4>
-                            <input id="" type="phone" placeholder="eg. 001752314825"/>
+                            <input type="phone" placeholder="eg. 001752314825"/>
                         </div>
                         <div className="input-container w-1/3">
                             <h4>Email<span> (Optional)</span></h4>
-                            <input id="" type="email" />
+                            <input type="email" />
                         </div>
                     </div>
                     <h3></h3>
@@ -69,25 +63,25 @@ const WayLayout = () => {
                     <div className="flex">
                         <div className="input-container w-1/2">
                             <h4>Company Name</h4>
-                            <input id="" type="text" placeholder="Delivery is from?"/>
+                            <input type="text" placeholder="Delivery is from?"/>
                         </div>
                         <div className="input-container w-1/2">
                             <h4>Company Address</h4>
-                            <input id="" type="text" placeholder="eg. 001752314825"/>
+                            <input type="text" placeholder="eg. 001752314825"/>
                         </div>
                     </div>
                     <div className="flex">
                         <div className="input-container w-1/3">
                             <h4>Waybill No.</h4>
-                            <input id="" type="text"/>
+                            <input type="text"/>
                         </div>
                         <div className="input-container w-1/3">
                             <h4>Total Quantity <span>(In Litres)</span></h4>
-                            <input id="" type="text"/>
+                            <input type="text"/>
                         </div>
                         <div className="input-container w-1/3">
                             <h4>Delivery Date<span> (Optional)</span></h4>
-                            <input id="" type="date" />
+                            <input type="date" />
                         </div>
                     </div>
 
@@ -95,18 +89,18 @@ const WayLayout = () => {
                         <div className="input-container w-1/3">
                             <h4>Delivery Location<span> (Station)</span></h4>
                             <select name="" id="">
-                                <option defaultValue>Station name</option>
+                                <option selcted>Station name</option>
                                 <option>Station 1</option>
                                 <option>Station 2</option>
                             </select>
                         </div>
                         {/* <div className="input-container w-1/2">
                             <h4>Waybill No.</h4>
-                            <input id="" type="text"/>
+                            <input type="text"/>
                         </div> */}
                     </div>
                     <div className="checkbox">
-                        <input id="" type="checkbox" />
+                        <input type="checkbox" />
                         Check box to confirm that item has being delivered
                     </div>
                 </form>

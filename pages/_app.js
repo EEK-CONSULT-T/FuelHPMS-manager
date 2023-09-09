@@ -7,15 +7,11 @@ import "@/styles/globals.css";
 import Sidebar from "../components/Sidebar";
 import { Toaster } from "react-hot-toast";
 
-
-
-
-
 function App({ Component, pageProps }) {
   const router = useRouter();
 
   // useEffect(() => {
-    
+
   //   const unsubscribe = onAuthStateChanged(auth, (user) => {
   //     if (!user) {
   //       // If the user is not authenticated, redirect to the login page
@@ -25,19 +21,15 @@ function App({ Component, pageProps }) {
 
   //   return () => unsubscribe(); // Clean up the event listener when the component unmounts
   // }, []);
-
+ 
   return (
-  <>
-    <Toaster />
+    <>
+      <Toaster />
       <Sidebar>
         <Component {...pageProps} />
       </Sidebar>
-      </>
-  
+    </>
   );
 }
 
 export default App;
-
-
-

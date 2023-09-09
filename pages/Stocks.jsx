@@ -51,7 +51,7 @@ import {
 } from "@material-tailwind/react";
 import { HiDotsHorizontal, HiDotsVertical } from "react-icons/hi";
 
-const Customers = () => {
+const Stocks = () => {
   const [users, setUsers] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -202,50 +202,50 @@ const Customers = () => {
     },
   ];
 
-  const TABLE_HEAD = ["Employee", "Position", "Salary(Ghc)", "Contact", ""];
+  const TABLE_HEAD = [
+    "Tanks",
+    "Location",
+    "Content",
+    "Currrent Volume",
+    "Last refilled",
+    "Tank Percentage",
+    "Status",
+    "Action",
+  ];
 
   const TABLE_ROWS = [
     {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-      name: "John Michael",
-      email: "john@creative-tim.com",
-      job: "Manager",
-      salary: "1,200",
-      phone: "076 947 92 72",
+      id: 1,
+      tank: "Tank 1",
+      location: "Accra",
+      content: "LPG",
+      currentVolume: "1000",
+      lastRefilled: "12/12/2021",
+      tankPercentage: "100%",
+      status: "Active",
+      action: "View Details",
     },
     {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-      name: "Alexa Liras",
-      email: "alexa@creative-tim.com",
-      job: "Programator",
-      salary: "2,000",
-
-      phone: "076 947 92 72",
+      id: 2,
+      tank: "Tank 2",
+      location: "Accra",
+      content: "LPG",
+      currentVolume: "1000",
+      lastRefilled: "12/12/2021",
+      tankPercentage: "100%",
+      status: "Active",
+      action: "View Details",
     },
     {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-      name: "Laurent Perrier",
-      email: "laurent@creative-tim.com",
-      job: "Executive",
-
-      salary: "3,000",
-      phone: "076 947 92 72",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg",
-      name: "Michael Levi",
-      email: "michael@creative-tim.com",
-      job: "Programator",
-      salary: "1,200",
-      phone: "076 947 92 72",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg",
-      name: "Richard Gran",
-      email: "richard@creative-tim.com",
-      job: "Manager",
-      salary: "1,200",
-      phone: "076 947 92 72",
+      id: 3,
+      tank: "Tank 3",
+      location: "Kumasi",
+      content: "LPG",
+      currentVolume: "1000",
+      lastRefilled: "12/12/2021",
+      tankPercentage: "100%",
+      status: "Active",
+      action: "View Details",
     },
   ];
 
@@ -635,4 +635,4 @@ const Customers = () => {
   );
 };
 
-export default Customers;
+export default Stocks;

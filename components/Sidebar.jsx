@@ -13,12 +13,12 @@
 // import { signOut } from "firebase/auth";
 // import { auth, db } from "@/firebase/config";
 // import { doc } from "firebase/firestore";
- 
+
 // const Sidebar = ({ children }) => {
 //    const router = useRouter();
 //    const excludeSidebar = router.pathname === "/Login";
-       
-//    const handleLogout = () => { 
+
+//    const handleLogout = () => {
 //     console.log("Logout");
 //     signOut(auth).then(() => {
 //       // Sign-out successful.
@@ -31,14 +31,10 @@
 
 //   const [user, setUser] = useState(null);
 
-
 //   useEffect(() => {
 //     const user = JSON.parse(localStorage.getItem("user"));
 //     setUser(user);
 //   }, []);
-
-  
-
 
 // const givingAdmin = user?.subroles?.includes("givingsAdmin");
 // const eventsAdmin = user?.subroles?.includes("eventsAdmin");
@@ -47,11 +43,6 @@
 // const groupsAdmin = user?.subroles?.includes("groupsAdmin");
 // const groupLeader = user?.subroles?.includes("groupLeader");
 
-
-
-   
-
-
 //     if (excludeSidebar) {
 //       return <main className="w-full">{children}</main>;
 //     }
@@ -59,7 +50,7 @@
 //     <div className="flex">
 //       <div className="fixed w-20 h-screen p-4 bg-white border-r-[1px] flex flex-col justify-between">
 //         <div className="flex flex-col items-center">
-         
+
 //           <Link href="/">
 //             <Tooltip content="Dashboard" placement="right-end">
 //               <div className="bg-purple-800 text-white p-3 rounded-lg inline-block">
@@ -83,11 +74,8 @@
 //             </Tooltip>
 //           </Link>
 
-
 //           {givingAdmin && (
-      
-            
-            
+
 //                          <Link href="/givings">
 //             <Tooltip content="Givings" placement="right-end">
 //               <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
@@ -98,16 +86,6 @@
 
 //           )}
 
-
-          
-
-
-
-             
-           
-         
-
-        
 //               {
 //                  eventsAdmin && (
 //           //          <Link href="/events">
@@ -126,19 +104,15 @@
 //               </div>
 //             </Tooltip>
 //           </Link>
-                  
 
 //           </>
 
-              
 //                   )
 //               }
-          
-         
 
 //           {
 //             podcastAdmin && (
-          
+
 //           <Link href="/podcast">
 //             <Tooltip content="Podcasts" placement="right-end">
 //               <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
@@ -150,7 +124,7 @@
 // }
 //            {
 //             groupsAdmin && (
-           
+
 //           <Link href="/Groups">
 //             <Tooltip content="Groups" placement="right-end">
 //               <div className="bg-gray-100 hover:bg-gray-200 cursor-pointer my-4 p-3 rounded-lg inline-block">
@@ -185,7 +159,6 @@
 
 // export default Sidebar;
 
-
 import {
   Card,
   Typography,
@@ -206,9 +179,24 @@ import {
 import { BsCashCoin } from "react-icons/bs";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import ProtectedRoute from "./protectedroute";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase/config";
 
-export default function Sidebar({children}) {
-    const router = useRouter();
+export default function Sidebar({ children }) {
+  const router = useRouter();
+  const handleLogout = () => {
+    console.log("Logout");
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        localStorage.removeItem("user");
+        router.push("/Login");
+      })
+      .catch((error) => {
+        // An error happened
+      });
+  };
 
   const excludeSidebar = router.pathname === "/Login";
   if (excludeSidebar) {
@@ -216,63 +204,76 @@ export default function Sidebar({children}) {
   }
 
   return (
-    <div className="flex">
-      <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 ">
-        <div className="mb-2 p-4">
-          <Typography variant="h5" color="blue-gray">
-            Fuel Up Admin
-          </Typography>
-        </div>
-        <List>
-          <Link href="/">
-            <ListItem>
-              <ListItemPrefix>
-                <PresentationChartBarIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              Dashboard
-            </ListItem>
-          </Link>
-          <Link href="/Investment">
-            <ListItem>
-              <ListItemPrefix>
-                <BsCashCoin className="h-5 w-5" />
-              </ListItemPrefix>
-              Investment
-            </ListItem>
-          </Link>
-          <ListItem>
-            <ListItemPrefix>
-              <InboxIcon className="h-5 w-5" />
-            </ListItemPrefix>
-            Employees
-            <ListItemSuffix>
-              {/* <Chip
+    <ProtectedRoute>
+      <div className="flex">
+        <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 ">
+          <div className="mb-2 p-4">
+            <Typography variant="h5" color="blue-gray">
+              Fuel Up (Ayawaso Staion)
+            </Typography>
+          </div>
+          <List>
+            <Link href="/">
+              <ListItem>
+                <ListItemPrefix>
+                  <PresentationChartBarIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                Dashboard
+              </ListItem>
+            </Link>
+            <Link href="/customers">
+              <ListItem>
+                <ListItemPrefix>
+                  <InboxIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                Employees
+                <ListItemSuffix>
+                  {/* <Chip
               value="14"
               size="sm"
               variant="ghost"
               color="blue-gray"
               className="rounded-full"
             /> */}
-            </ListItemSuffix>
-          </ListItem>
-          <Link href="/Stations">
-            <ListItem>
-              <ListItemPrefix>
-                <UserCircleIcon className="h-5 w-5" />
-              </ListItemPrefix>
-              Stations
-            </ListItem>
-          </Link>
+                </ListItemSuffix>
+              </ListItem>
+            </Link>
 
-          <ListItem>
-            <ListItemPrefix>
-              <PowerIcon className="h-5 w-5 text-red-500" />
-            </ListItemPrefix>
-            <h2 className="text-red-500">Log Out</h2>
-          </ListItem>
-        </List>
-      </Card>
-      <main className="flex w-full ">{children}</main>
-    </div>
+            <Link href="/Stocks">
+              <ListItem>
+                <ListItemPrefix>
+                  <UserCircleIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                Stocks
+              </ListItem>
+            </Link>
+            <Link href="/Stocks">
+              <ListItem>
+                <ListItemPrefix>
+                  <UserCircleIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                Sales
+              </ListItem>
+            </Link>
+            <Link href="/Stations">
+              <ListItem>
+                <ListItemPrefix>
+                  <UserCircleIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                Expenses
+              </ListItem>
+            </Link>
+
+            <ListItem onClick={handleLogout}>
+              <ListItemPrefix>
+                <PowerIcon className="h-5 w-5 text-red-500" />
+              </ListItemPrefix>
+              <h2 className="text-red-500">Log Out</h2>
+            </ListItem>
+          </List>
+        </Card>
+        <main className="flex w-full ">{children}</main>
+      </div>
+    </ProtectedRoute>
   );
 }

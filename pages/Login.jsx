@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc, onSnapshot } from "firebase/firestore";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { doc, getDoc, onSnapshot, setDoc } from "firebase/firestore";
 import { auth, db } from "@/firebase/config";
 import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
@@ -16,55 +19,74 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-      const user = userCredential.user;
+    // create user
 
-      // Retrieve user data from Firestore collection in realtim
-       
-       const userDoc = await getDoc(doc(db, "users", user.uid));
+    // try {
+    //   //create user
+    //   const userCredential = await createUserWithEmailAndPassword(
+    //     auth,
+    //     email,
+    //     password
+    //   );
+    //   const user = userCredential.user;
+    //   // add user to firestore with station
+    //   const userRef = doc(db, "users", user.uid);
+    //   await setDoc(userRef, {
+    //     email: email,
+    //     name: "Samuel Agyemang",
+    //     station: "Ayawaso",
+    //     profileType: "manager",
+    //   });
+    //   toast.success("Login successful");
+    //   router.push("/");
+    //   setLoading(false);
 
-      
+    //   //save user data to localstorage
+    // } catch (error) {
+    //   console.log(error);
 
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        const profileType = userData.profileType;
-        //save user data to localstorage
-        localStorage.setItem("user", JSON.stringify(userData));
+    //   toast.error(error);
 
-        if (profileType === "admin") {
-          toast.success("Login successful");
-          router.push("/");
+    //   setLoading(false);
+    // }
 
-          setLoading(false);
+    if (typeof window !== "undefined") {
+      try {
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const user = userCredential.user;
+
+        // Retrieve user data from Firestore collection in real-time
+
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          const profileType = userData.profileType;
+          // Save user data to localStorage
+          localStorage.setItem("user", JSON.stringify(userData));
+
+          if (profileType === "manager") {
+            toast.success("Login successful");
+            router.push("/");
+          } else {
+            // Redirect to the normal user page
+
+            toast.error("You are not an admin");
+          }
         } else {
-          // Redirect to normal user page
-
-          toast.error("You are not an admin");
-          setLoading(false);
+          // doc.data() will be undefined in this case
+          console.log("No such document!");
         }
-
+      } catch (error) {
+        console.log(error);
+        toast.error(error);
       }
-      //save user subroles to localstorage
-      
-
-      
-
-      
-      
-    }
-    
-    catch (error) {
-      toast.error("Login failed");
-      console.log("Login failed:", error);
-      setLoading(false);
     }
   };
-
   return (
     <div
       className="relative min-h-screen flex flex-col items-center justify-center bg-no-repeat bg-cover bg-center"
@@ -75,7 +97,6 @@ export default function LoginPage() {
       <div className="absolute top-0 left-0 w-full h-full bg-gray-300 bg-opacity-50"></div>
       <div className="bg-black rounded-lg p-8 shadow-lg backdrop-filter backdrop-blur-md bg-opacity-10 z-10">
         <div className="flex flex-col items-center justify-center mb-8">
-
           {/* <img
             src="https://images.unsplash.com/photo-1548625149-fc4a29cf7092?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8Y2h1cmNofGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
             alt="Logo"

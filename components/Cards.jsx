@@ -110,23 +110,11 @@ const Cards = () => {
                   minimumFractionDigits: 2,
                 })}
               </p>
-              <p className="text-gray-600">Total Investments</p>
+              <p className="text-gray-600">Total Expenditure</p>
             </div>
           </div>
         </div>
-        <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
-          <div className="flex items-center rounded">
-            <div className=" flex items-center m-2 rounded-lg">
-              <FaCalendar size={60} className="p-4 text-gray-600 rounded-md " />
-            </div>
-            <div className="flex flex-col w-full ">
-              <p className="text-2xl font-bold">
-                {totalEvents.toLocaleString()}
-              </p>
-              <p className="text-gray-600">Total Stations</p>
-            </div>
-          </div>
-        </div>
+       
         <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex items-center rounded">
             <div className=" flex items-center m-2 rounded-lg">

@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children }) => {
     if (!user) {
       router.push("/Login");
     }
-    }, []); 
+  }, []);
 
   return children;
 };

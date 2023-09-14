@@ -7,6 +7,9 @@ import {
   doc,
   getDoc,
   deleteDoc,
+  onSnapshot,
+  query,
+  where,
 } from "firebase/firestore";
 import { Card, Typography } from "@material-tailwind/react";
 import Link from "next/link.js";
@@ -50,17 +53,90 @@ import {
   Button,
 } from "@material-tailwind/react";
 import { HiDotsHorizontal, HiDotsVertical } from "react-icons/hi";
+import AddEmployee from "@/components/employees/AddEmployee";
 
 const Customers = () => {
-  const [users, setUsers] = useState([]);
+  const [employees, setEmployees] = useState([]);
 
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [blockAll, setBlockAll] = useState(false);
-  const [sortOption, setSortOption] = useState("all"); // 'all', 'blocked', or 'unblocked'
-  const [sortOrder, setSortOrder] = useState("asc");
 
-  //password for all users
+  //fetch station from localstoarage
+   
+ const user = auth.currentUser;
+ console.log(user);
+ const email = user.email;
+  console.log(email);
+  //fetch station from localstoarage based on email 
+  const [station, setStation] = useState("");
+  const fetchStation = async () => {
+    const docRef = doc(db, "users", email);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+
+
+
+
+
+
+
+
+      console.log("Document data:", docSnap.data());
+      const station = docSnap.data().station;
+      console.log(station);
+      setStation(station);
+    } else {
+      // doc.data() will be undefined in this case
+      console.log("No such document!");
+    }
+  };
+  fetchStation();
+  
+
+
+
+
+
+
+
+  useEffect(() => {
+  
+
+    const fetchEmployees = async () => {
+           
+   // user data from local storage
+     
+
+  
+      setLoading(true);
+      try {
+        // Fetch data from Firestore
+        const querySnapshot = await getDocs(
+          query(collection(db, "employees"), where("station", "==", station))
+        );
+
+        const employeesData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setEmployees(employeesData);
+        setLoading(false);
+        console.log(employeesData);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  //fetch station from localstoarage
+
+  //fetch station from localstoarage
+
+  //fetch station from localstoarage
 
   //pull user data from local storage
 
@@ -204,51 +280,6 @@ const Customers = () => {
 
   const TABLE_HEAD = ["Employee", "Position", "Salary(Ghc)", "Contact", ""];
 
-  const TABLE_ROWS = [
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-      name: "John Michael",
-      email: "john@creative-tim.com",
-      job: "Manager",
-      salary: "1,200",
-      phone: "076 947 92 72",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-      name: "Alexa Liras",
-      email: "alexa@creative-tim.com",
-      job: "Programator",
-      salary: "2,000",
-
-      phone: "076 947 92 72",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-      name: "Laurent Perrier",
-      email: "laurent@creative-tim.com",
-      job: "Executive",
-
-      salary: "3,000",
-      phone: "076 947 92 72",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-4.jpg",
-      name: "Michael Levi",
-      email: "michael@creative-tim.com",
-      job: "Programator",
-      salary: "1,200",
-      phone: "076 947 92 72",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-5.jpg",
-      name: "Richard Gran",
-      email: "richard@creative-tim.com",
-      job: "Manager",
-      salary: "1,200",
-      phone: "076 947 92 72",
-    },
-  ];
-
   return (
     <>
       <Card className="h-full w-full p-8">
@@ -263,36 +294,16 @@ const Customers = () => {
               </Typography>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-              <Button
-                variant="outlined"
-                size="sm"
-                className="flex items-center justify-around"
-              >
-                Download report <FaFileDownload className="h-4 w-4" />
-              </Button>
-              <Button className="flex items-center gap-3" size="sm">
-                <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add
-                employee
-              </Button>
+              <AddEmployee />
             </div>
           </div>
-          {/* <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <Tabs value="all" className="w-full md:w-max">
-              <TabsHeader>
-                {TABS.map(({ label, value }) => (
-                  <Tab key={value} value={value}>
-                    &nbsp;&nbsp;{label}&nbsp;&nbsp;
-                  </Tab>
-                ))}
-              </TabsHeader>
-            </Tabs>
-            <div className="w-full md:w-72">
-              <Input
-                label="Search"
-                icon={<MagnifyingGlassIcon className="h-5 w-5" />}
-              />
-            </div>
-          </div> */}
+
+          <div className="w-full md:w-72">
+            <Input
+              label="Search"
+              icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+            />
+          </div>
         </CardHeader>
         <CardBody className="overflow-scroll px-0">
           <table className="mt-4 w-full min-w-max table-auto text-left">
@@ -309,30 +320,27 @@ const Customers = () => {
                       className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
                     >
                       {head}{" "}
-                      {index !== TABLE_HEAD.length - 1 && (
-                        <ChevronUpDownIcon
-                          strokeWidth={2}
-                          className="h-4 w-4"
-                        />
-                      )}
                     </Typography>
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {TABLE_ROWS.map(
-                ({ img, name, email, job, salary, phone }, index) => {
-                  const isLast = index === TABLE_ROWS.length - 1;
-                  const classes = isLast
-                    ? "p-4"
-                    : "p-4 border-b border-blue-gray-50";
+              {employees.map(
+                (
+                  { id, imageUrl, name, email, position, salary, phone },
+                  index
+                ) => {
+                  const classes =
+                    index % 2 === 0
+                      ? "p-4"
+                      : "p-4 border-b border-blue-gray-50";
 
                   return (
                     <tr key={name}>
                       <td className={classes}>
                         <div className="flex items-center gap-3">
-                          <Avatar src={img} alt={name} size="sm" />
+                          <Avatar src={imageUrl} alt={name} size="sm" />
                           <div className="flex flex-col">
                             <Typography
                               variant="small"
@@ -358,7 +366,7 @@ const Customers = () => {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {job}
+                            {position}
                           </Typography>
                           <Typography
                             variant="small"
@@ -398,7 +406,10 @@ const Customers = () => {
                       <td className={classes}>
                         <Menu>
                           <MenuList>
-                            <Link href={""}>
+                            <Link
+                              href="/employees/[id]"
+                              as={`/employees/${id}`}
+                            >
                               <MenuItem>View Details</MenuItem>
                             </Link>
 

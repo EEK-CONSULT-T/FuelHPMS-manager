@@ -61,37 +61,10 @@ const Customers = () => {
   const [loading, setLoading] = useState(true);
 
   //fetch station from localstoarage
-   
- const user = auth.currentUser;
- console.log(user);
- const email = user.email;
-  console.log(email);
-  //fetch station from localstoarage based on email 
-  const [station, setStation] = useState("");
-  const fetchStation = async () => {
-    const docRef = doc(db, "users", email);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-
-
-
-
-
-
-
-
-      console.log("Document data:", docSnap.data());
-      const station = docSnap.data().station;
-      console.log(station);
-      setStation(station);
-    } else {
-      // doc.data() will be undefined in this case
-      console.log("No such document!");
-    }
-  };
-  fetchStation();
   
+
+
+
 
 
 
@@ -112,13 +85,11 @@ const Customers = () => {
       try {
         // Fetch data from Firestore
         const querySnapshot = await getDocs(
-          query(collection(db, "employees"), where("station", "==", station))
+          query(collection(db, "employees"),
+    
+          )
         );
-
-        const employeesData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+        
 
         setEmployees(employeesData);
         setLoading(false);

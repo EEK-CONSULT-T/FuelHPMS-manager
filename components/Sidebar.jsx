@@ -182,8 +182,22 @@ import { useRouter } from "next/router";
 import ProtectedRoute from "./protectedroute";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/config";
+import { useEffect, useState } from "react";
 
 export default function Sidebar({ children }) {
+
+
+
+  const [user, setUser] = useState(null);
+
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("user"));
+  //   setUser(user);
+  // }, []);
+
+  // console.log('this' ,user);
+
+
   const router = useRouter();
   const handleLogout = () => {
     console.log("Logout");
@@ -198,7 +212,7 @@ export default function Sidebar({ children }) {
       });
   };
 
-  const excludeSidebar = router.pathname === "/Login";
+  const excludeSidebar = router.pathname === "/Login" || router.pathname === "/Forgot";
   if (excludeSidebar) {
     return <main className="w-full">{children}</main>;
   }
@@ -255,7 +269,7 @@ export default function Sidebar({ children }) {
                 Sales
               </ListItem>
             </Link>
-            <Link href="/Stations">
+            <Link href="/Expenses">
               <ListItem>
                 <ListItemPrefix>
                   <UserCircleIcon className="h-5 w-5" />

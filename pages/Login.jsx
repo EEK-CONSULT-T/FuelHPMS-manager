@@ -8,6 +8,7 @@ import { auth, db } from "@/firebase/config";
 import { useRouter } from "next/router";
 import Loader from "@/components/Loader";
 import { toast } from "react-hot-toast";
+import Link from "next/link";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,78 +16,49 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+ const handleLogin = async (e) => {
+   e.preventDefault();
+   setLoading(true);
 
-    // create user
+   if (typeof window !== "undefined") {
+     try {
+       const userCredential = await signInWithEmailAndPassword(
+         auth,
+         email,
+         password
+       );
+       const user = userCredential.user;
 
-    // try {
-    //   //create user
-    //   const userCredential = await createUserWithEmailAndPassword(
-    //     auth,
-    //     email,
-    //     password
-    //   );
-    //   const user = userCredential.user;
-    //   // add user to firestore with station
-    //   const userRef = doc(db, "users", user.uid);
-    //   await setDoc(userRef, {
-    //     email: email,
-    //     name: "Samuel Agyemang",
-    //     station: "Ayawaso",
-    //     profileType: "manager",
-    //   });
-    //   toast.success("Login successful");
-    //   router.push("/");
-    //   setLoading(false);
+       // Retrieve user data from Firestore collection in real-time
 
-    //   //save user data to localstorage
-    // } catch (error) {
-    //   console.log(error);
+       const userDoc = await getDoc(doc(db, "users", user.uid));
 
-    //   toast.error(error);
+       localStorage.setItem("user", JSON.stringify(userDoc.data()));
 
-    //   setLoading(false);
-    // }
+       if (userDoc.exists()) {
+         const userData = userDoc.data();
+         const position = userData.position; // Fixed typo: changed postion to position
 
-    if (typeof window !== "undefined") {
-      try {
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-        const user = userCredential.user;
-
-        // Retrieve user data from Firestore collection in real-time
-
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-
-        if (userDoc.exists()) {
-          const userData = userDoc.data();
-          const profileType = userData.profileType;
-          // Save user data to localStorage
-          localStorage.setItem("user", JSON.stringify(userData));
-
-          if (profileType === "manager") {
-            toast.success("Login successful");
-            router.push("/");
-          } else {
-            // Redirect to the normal user page
-
-            toast.error("You are not an admin");
-          }
-        } else {
-          // doc.data() will be undefined in this case
-          console.log("No such document!");
-        }
-      } catch (error) {
-        console.log(error);
-        toast.error(error);
-      }
-    }
-  };
+         // Save user data to localStorage
+         if (position === "Manager") {
+           toast.success("Login successful");
+           router.push("/");
+         } else {
+           // Redirect to the normal user page
+           toast.error("You are not an admin");
+           setLoading(false);
+         }
+       } else {
+         console.log("No such document!");
+         setLoading(false);
+       }
+     } catch (error) {
+       console.log(error);
+       toast.error(error.message); // Displaying error message
+       setLoading(false);
+     }
+   }
+ };
   return (
     <div
       className="relative min-h-screen flex flex-col items-center justify-center bg-no-repeat bg-cover bg-center"
@@ -144,6 +116,16 @@ export default function LoginPage() {
             </button>
           )}
         </form>
+
+        <div>
+          <p className="mt-4 text-white">
+            Forgot password?{" "}
+            <Link href="/Forgot" className="text-blue-400 ">
+               Reset
+              </Link>
+              </p>
+
+        </div>
       </div>
     </div>
   );

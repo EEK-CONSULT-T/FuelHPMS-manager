@@ -15,7 +15,7 @@ import Progrssings from '@/components/Progrssings';
 import Recordings from '@/components/Recordings';
 import Progressings from '@/components/Progrssings';
 import Report from '@/components/Report';
- 
+
 
 import Header from '../components/Header';
 import TopCards from '../components/TopCards';

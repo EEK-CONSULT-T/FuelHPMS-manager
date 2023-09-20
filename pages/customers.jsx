@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import {
   collection,
   getFirestore,
@@ -59,49 +59,67 @@ const Customers = () => {
   const [employees, setEmployees] = useState([]);
 
   const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState([]);
 
   //fetch station from localstoarage
   
-
-
-
-
-
-
-
-
-
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-  
-
-    const fetchEmployees = async () => {
-           
-   // user data from local storage
-     
-
-  
-      setLoading(true);
-      try {
-        // Fetch data from Firestore
-        const querySnapshot = await getDocs(
-          query(collection(db, "employees"),
-    
-          )
-        );
-        
-
-        setEmployees(employeesData);
-        setLoading(false);
-        console.log(employeesData);
-      } catch (error) {
-        console.error("Error fetching employees:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchEmployees();
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
   }, []);
+
+  console.log("thise", user?.station_id);
+
+  
+
+
+
+
+
+
+
+
+
+
+ useEffect(() => {
+  const fetchEmployees = async () => {
+    setLoading(true);
+    try {
+      // Reference to the "employees" collection and query based on station_id
+      const employeesCollection = collection(db, "users");
+      const q = query(employeesCollection, where("station_id", "==", user?.station_id));
+
+      // Listen to changes in the collection in real-time
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const updatedEmployeesData = [];
+        querySnapshot.forEach((doc) => {
+          updatedEmployeesData.push({ id: doc.id, ...doc.data() });
+        });
+        setEmployees(updatedEmployeesData);
+        setLoading(false);
+      });
+
+      // Remember to unsubscribe when component unmounts to avoid memory leaks
+      return unsubscribe;
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+      setLoading(false);
+    }
+  };
+
+  fetchEmployees();
+}, [user]);
+// Empty dependency array means this effect runs once when component mounts
+
+// ... Rest of your component
+
+
+
+
+
+
 
   //fetch station from localstoarage
 

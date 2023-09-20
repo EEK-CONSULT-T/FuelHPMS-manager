@@ -32,6 +32,7 @@ import { CSVLink } from "react-csv";
 import { FaFileDownload } from "react-icons/fa";
 import { HiDotsHorizontal, HiDotsVertical } from "react-icons/hi";
 import AddStation from "../stations./addStation";
+import AddExpense from "./AddExpense";
 
 const TABLE_HEAD = ["No.", "Type", "Amount (Ghc)", "Date",];
 
@@ -95,7 +96,7 @@ export default function ExpenseList() {
                 </button>
               </div>
             </div>
-            <AddStation />
+            <AddExpense />
             {/* <Button className="flex items-center gap-3" size="sm">
               <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add member
             </Button> */}

@@ -167,6 +167,7 @@ import {
   ListItemPrefix,
   ListItemSuffix,
   Chip,
+  Avatar,
 } from "@material-tailwind/react";
 import {
   PresentationChartBarIcon,
@@ -183,19 +184,22 @@ import ProtectedRoute from "./protectedroute";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import { useEffect, useState } from "react";
+import logo from "../assets/images/logo.jpeg"
+
+
 
 export default function Sidebar({ children }) {
 
 
 
   const [user, setUser] = useState(null);
+  
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setUser(user);
+  }, []);
 
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem("user"));
-  //   setUser(user);
-  // }, []);
-
-  // console.log('this' ,user);
+  console.log("thise", user?.name);
 
 
   const router = useRouter();
@@ -222,9 +226,18 @@ export default function Sidebar({ children }) {
       <div className="flex">
         <Card className="h-[calc(100vh-2rem)] w-full max-w-[20rem] p-4 shadow-xl shadow-blue-gray-900/5 ">
           <div className="mb-2 p-4">
-            <Typography variant="h5" color="blue-gray">
-              Fuel Up (Ayawaso Staion)
-            </Typography>
+            <Avatar
+              src="https://firebasestorage.googleapis.com/v0/b/hpmsf-690d7.appspot.com/o/proAssets%2FWhatsApp%20Image%202023-09-19%20at%203.17.45%20PM.jpeg?alt=media&token=349beddc-c3ed-4a8e-8c4c-d93cee200449"
+              color="lightBlue"
+              size=""
+              className="w-36 h-36 mb-4"
+            />
+
+            <div>
+              <p>
+                <span className="font-bold text-lg">Welcome</span> {user?.name},
+              </p>
+            </div>
           </div>
           <List>
             <Link href="/">

@@ -274,6 +274,14 @@ export default function Sidebar({ children }) {
                 Stocks
               </ListItem>
             </Link>
+            <Link href="/Tanks">
+              <ListItem>
+                <ListItemPrefix>
+                  <UserCircleIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                Tanks
+              </ListItem>
+            </Link>
             <Link href="/Stocks">
               <ListItem>
                 <ListItemPrefix>

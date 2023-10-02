@@ -16,7 +16,6 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
-import Link from "next/link";
 
 const TABS = [
   {
@@ -33,27 +32,26 @@ const TABS = [
   },
 ];
 
-const TABLE_HEAD = ["Tank ", "tank content", "Old Price (GHC)",  "New Price (GHC)", "Date"];
+const TABLE_HEAD = [
+  "Tank ",
+  "tank content",
+  "Amount (GHC)",
+  "current volume",
+  "last refilled",
+  "New stock",
+];
 
 const TABLE_ROWS = [
   {
-  
     name: "Tank 1",
     tank_content: "Water",
-    old_price: "1000",
-    new_price: "1200",
-    date: "12/12/2021",
-
+    current_volume: "1000",
+    last_refilled: "12/12/2021",
+    new_stock: "1000",
   },
+];
 
-]
-
-
-
-
-
-
-export default function StocksList() {
+export default function UpdatePricing() {
   return (
     <Card className="h-full w-full">
       <CardHeader floated={false} shadow={false} className="rounded-none">
@@ -67,16 +65,14 @@ export default function StocksList() {
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Link href="/Pricing">
-            <Button variant="outlined" size="sm"color="green" >
+            <Button variant="outlined" size="sm" color="green">
               Update Pricing
             </Button>
-            </Link>
-            {/* <Button variant="outlined" size="sm">
+            <Button variant="outlined" size="sm">
               view tanks
-            </Button> */}
+            </Button>
             <Button className="flex items-center gap-3" size="sm">
-              <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Tank
+              <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add stock
             </Button>
           </div>
         </div>
@@ -133,10 +129,9 @@ export default function StocksList() {
                 {
                   name,
                   tank_content,
-                  old_price,
-                  new_price,
-                  date,
-
+                  current_volume,
+                  last_refilled,
+                  new_stock,
                 },
                 index
               ) => {
@@ -174,15 +169,14 @@ export default function StocksList() {
                           color="blue-gray"
                           className="font-normal"
                         >
-                        
-                          {old_price}
+                          {current_volume}
                         </Typography>
                         <Typography
                           variant="small"
                           color="blue-gray"
                           className="font-normal opacity-70"
                         >
-                          {date}
+                          {last_refilled}
                         </Typography>
                       </div>
                     </td>
@@ -193,7 +187,7 @@ export default function StocksList() {
                         color="blue-gray"
                         className="font-normal"
                       >
-                        {new_price}
+                        {new_stock}
                       </Typography>
                     </td>
                     <td className={classes}>

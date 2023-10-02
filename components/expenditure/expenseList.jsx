@@ -27,12 +27,14 @@ import {
 } from "@material-tailwind/react";
 import Link from "next/link";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
 import { FaFileDownload } from "react-icons/fa";
 import { HiDotsHorizontal, HiDotsVertical } from "react-icons/hi";
 import AddStation from "../stations./addStation";
 import AddExpense from "./AddExpense";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { db } from "@/firebase/config";
 
 const TABLE_HEAD = ["No.", "Type", "Amount (Ghc)", "Date",];
 
@@ -53,10 +55,60 @@ const TABLE_ROWS = [
 ];
 
 export default function ExpenseList() {
+  const [expenses, setExpenses] = useState([ ])
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [sortOrder, setSortOrder] = useState("desc");
   const [searchTerm, setSearchTerm] = useState("");
+  const [totalexpenditure, setTotalexpenditure] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+
+ //fetching all expenes realtime using onspanshot
+  const fetchExpenses = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const stationId = user?.station_id; // Assuming station_id is stored in the user object
+
+      console.log("stationId", stationId);
+
+      if (stationId) {
+        // Fetch all expenses for the station in realtime using onSnapshot
+        const q = query(
+          collection(db, "expenses"),
+          where("station", "==", stationId)
+        );
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          const documents = [];
+          querySnapshot.forEach((doc) => {
+            documents.push({ ...doc.data(), id: doc.id });
+          });
+          setExpenses(documents);
+          console.log("Expenses", documents);
+
+          // Calculate total expenditure
+          const totalExpenditure = documents.reduce(
+            (acc, curr) => acc + curr.amount,
+            0
+          );
+          setTotalexpenditure(totalExpenditure);
+        });
+
+        return () => {
+          // Unsubscribe from the listener when the component unmounts
+          unsubscribe();
+        };
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching expenses:", error);
+      setLoading(false);
+    }
+  };
+
+
+
 
   const handleDateFromChange = (e) => {
     setDateFrom(e.target.value);
@@ -73,6 +125,11 @@ export default function ExpenseList() {
   const handleSearchTermChange = (e) => {
     setSearchTerm(e.target.value);
   };
+
+
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
 
   return (
     <Card className="h-full w-full p-8">
@@ -201,15 +258,83 @@ export default function ExpenseList() {
               ))}
             </tr>
           </thead>
+
           <tbody>
-            {TABLE_ROWS.map(({ index, type, amount, date }) => {
+            {expenses
+              .filter((expense) => {
+                if (!searchTerm) return true;
+
+                return expense.category
+                  .toLowerCase()
+                  .includes(searchTerm.toLowerCase());
+              }
+              )
+              .map(({ id, category, amount, date }, index) => {
+
+                return (
+                  <tr key={id}>
+                    <td className="border-b border-blue-gray-200 p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-col">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal"
+                          >
+                            {index + 1}
+                          </Typography>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="border-b border-blue-gray-200 p-4">
+                      <div className="flex flex-col">
+                        <Typography
+
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal opacity-70"
+                        >
+                          {category}
+
+                        </Typography>
+                      </div>
+                    </td>
+
+                    <td className="border-b border-blue-gray-200 p-4">
+                      <Typography
+
+                        variant="small" 
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {amount}
+                      </Typography>
+                    </td>
+                    <td className="border-b border-blue-gray-200 p-4">
+                      <Typography
+
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {date}
+                      </Typography>
+                    </td>
+
+                    </tr>
+                );
+              })}
+          </tbody>
+
+          {/*  <tbody>
+           {TABLE_ROWS.map(({ index, name, location, expenditure, sales }) => {
               const isLast = index === TABLE_ROWS.length - 1;
               const classes = isLast
                 ? "p-4"
                 : "p-4 border-b border-blue-gray-50";
 
               return (
-                <tr key={index}>
+                <tr key={name}>
                   <td className={classes}>
                     <div className="flex items-center gap-3">
                       <div className="flex flex-col">
@@ -218,7 +343,7 @@ export default function ExpenseList() {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {index}
+                          {name}
                         </Typography>
                       </div>
                     </div>
@@ -230,7 +355,7 @@ export default function ExpenseList() {
                         color="blue-gray"
                         className="font-normal opacity-70"
                       >
-                        {type}
+                        {location}
                       </Typography>
                     </div>
                   </td>
@@ -241,7 +366,7 @@ export default function ExpenseList() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                        {amount}
+                      {sales}
                     </Typography>
                   </td>
                   <td className={classes}>
@@ -250,11 +375,11 @@ export default function ExpenseList() {
                       color="blue-gray"
                       className="font-normal"
                     >
-                        {date}
+                      {expenditure}
                     </Typography>
                   </td>
 
-                  {/* <td className={classes}>
+                  <td className={classes}>
                     <Menu>
                       <MenuList>
                         <Link href={"/InvestorDetails"}>
@@ -270,11 +395,11 @@ export default function ExpenseList() {
                         </IconButton>
                       </MenuHandler>
                     </Menu>
-                  </td> */}
+                  </td>
                 </tr>
               );
             })}
-          </tbody>
+          </tbody> */}
         </table>
       </CardBody>
 

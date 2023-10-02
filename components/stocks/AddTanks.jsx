@@ -15,7 +15,7 @@ import { Timestamp, collection, doc, setDoc } from "firebase/firestore";
 import { db, storage } from "@/firebase/config";
 import { nanoid } from "nanoid";
 
-const AddExpense = () => {
+const AddTank = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(!open);
   const [user, setUser] = useState(null);
@@ -27,69 +27,73 @@ const AddExpense = () => {
 
   console.log("this", user);
 
-  const [expense, setExpense] = useState({
+  const [tank, setTank] = useState({
     id: nanoid(),
-    description: "",
+    name: "",
     //this takes an integer
-    amount: "",
+    tank_content: "",
 
-    category: "",
+    
+     current_volume: "",
+     pumps:[],
+
+    fuel_type: "",
     station: "",
-    date: "",
   });
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setExpense({ ...expense, [name]: value });
+    setTank({ ...tank, [name]: value });
   };
 
   //handle selected category
 
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
-    setExpense({ ...expense, [name]: value });
+    setTank({ ...tank, [name]: value });
   };
 
-
-
-  
-
-  const handleAddExpense = async (e) => {
+  const handleAddTank = async (e) => {
     e.preventDefault();
 
     try {
-      const docRef = doc(db, "expenses", expense.id);
-
-      const expenseData = {
-        id: expense.id,
-        description: expense.description,
-        amount: parseFloat(expense.amount),
+      const docRef = doc(db, "tanks", tank.id);
+      const tankData = {
+        id: tank.id,
+        name: tank.name,
+        current_volume: parseFloat(tank.current_volume),
         station: user?.station_id,
-        category: expense.category,
-        date: expense.date,
+        pumps: tank.pumps,
+        fuel_type: tank.fuel_type,
+        last_refilled: //take selected date and convert to timestamp
+            tank.last_refilled
       };
 
-      await setDoc(docRef, expenseData);
-      toast.success("Expense created successfully");
+      await setDoc(docRef, tankData);
+      toast.success("Tank created successfully");
 
       handleOpen();
 
       //empty fields
-      setExpense({
+      setTank({
         id: nanoid(),
-        description: "",
-        amount: "",
-        category: "",
-        station: "",
-        date: "",
+        name: "",
+        fuel_type: "",
+        current_volume: "",
+        last_refilled: "",
+
+
       });
 
       //console.log("Document written with ID: ", docRef.id);
     } catch (error) {
       console.log(error);
       alert(error.message);
+      toast.error(error.message);
     }
   };
+
+
 
   //simlpe interest formula
 
@@ -102,7 +106,7 @@ const AddExpense = () => {
               className="bg-blue-600 text-white px-4 py-2 rounded-lg "
               onClick={handleOpen}
             >
-              Add Expense
+              Add Tank
             </button>
           </div>
         </div>
@@ -116,74 +120,86 @@ const AddExpense = () => {
           }}
         >
           <DialogHeader>
-            <h5 className="font-bold text-blue-400">Add Expense</h5>
+            <h5 className="font-bold text-blue-400">Add Tank</h5>
           </DialogHeader>
           <DialogBody divider>
-            <form onSubmit={handleAddExpense}>
-              <div className="m-2">
-                <label htmlFor="">Expense's description</label>
+            <form onSubmit={handleAddTank}>
+                <div className="m-2">
+                <label htmlFor="">
+                    Tank Name (e.g. Tank 1)
+                </label>
                 <input
-                  type="text"
-                  placeholder="What is the expense for?"
-                  className="border-2 border-gray-300 p-2 rounded-lg w-full"
-                  onChange={handleInputChange}
-                  value={expense.description}
-                  name="description"
+                    type="text"
+                    placeholder="Tank Name"
+                    className="border-2 border-gray-300 p-2 rounded-lg w-full"
+                    required
+                    name="name"
+                    onChange={handleInputChange}
+                    value={tank.name}
                 />
-              </div>
+                </div>
+
+              
 
               <div className="m-2">
-                <label htmlFor="">Expense's amount(GHC)</label>
+                <label htmlFor="">
+                    Tank Current Volume(litres)
+                </label>
                 <input
                   min={1}
                   type="number"
-                  placeholder="Expense's amount"
+                  placeholder="Tank Current Volume"
                   className="border-2 border-gray-300 p-2 rounded-lg w-full"
-                  name="amount"
+                  required
+                  name="current_volume"
                   onChange={handleInputChange}
-                  value={expense.amount}
+                  value={tank.current_volume}
                 />
               </div>
 
-              <div className="m-2">
-                <label htmlFor="">Date</label>
+             
+
+              <div className="m-2 flex-col flex">
+                <label htmlFor="">
+                    Fuel Type
+                </label>
+                <select
+                  className="w-full py-3 rounded-lg border-2 border-gray-300 px-4"
+                  label="Select Fuel Type"
+                  value={tank.fuel_type}
+                  onChange={handleSelectChange}
+                  name="fuel_type" // Update name to "category"
+                  required
+                >
+                  <option value={""} disabled>
+                    Select Fuel Type
+                  </option>
+                  <option value="Super">
+                    Super
+                  </option>
+                  <option value="Diesel">
+                    Diesel
+                  </option>
+                  <option value="Kerosene">
+                    Kerosene
+                  </option>
+        
+                </select>
+              </div>
+
+                <div className="m-2 flex-col flex">
+                <label htmlFor="">
+                    Last Refilled
+                </label>
                 <input
                   type="date"
                   placeholder="Date"
                   className="border-2 border-gray-300 p-2 rounded-lg w-full"
-                  name="date"
+                  name="last_refilled"
                   onChange={handleInputChange}
-                  value={expense.date}
+                  value={tank.last_refilled}
                 />
-              </div>
-
-              <div className="m-2 flex-col flex">
-                <label htmlFor="">Expense Category</label>
-                <select
-                  className="w-full py-3 rounded-lg border-2 border-gray-300 px-4"
-                  label="Select Category"
-                  value={expense.category}
-                  onChange={handleSelectChange}
-                  name="category" // Update name to "category"
-                  required
-                >
-                  <option value={""} disabled>
-                    Select Category of Expense
-                  </option>
-                  <option value="Salary">Salary</option>
-                  <option value="Allowance">Allowance</option>
-                  <option value="Fuel">Fuel</option>
-                  <option value="Maintenance">Maintenance</option>
-                  <option value="Rent">Rent</option>
-                  <option value="Office Supplies">Office Supplies</option>
-                  <option value="Internet">Internet</option>
-
-                  <option value="Transportation">Transportation</option>
-                  <option value="ECG Bills">ECG Bills</option>
-                  <option value="Water Bills">Water Bills</option>
-                  <option value="Others">Others</option>
-                </select>
-              </div>
+                </div>
 
               <div className="flex justify-between m-4">
                 <button
@@ -201,4 +217,4 @@ const AddExpense = () => {
   );
 };
 
-export default AddExpense;
+export default AddTank;

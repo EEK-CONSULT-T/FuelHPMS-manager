@@ -221,6 +221,7 @@ const TanksList = () => {
           <div className="flex items-center">
             
             <div>
+              <AddTank/>
                 <button>
                     
                 </button>

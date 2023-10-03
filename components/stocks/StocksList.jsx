@@ -17,6 +17,7 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import Link from "next/link";
+import AddStock from "./AddStock";
 
 const TABS = [
   {
@@ -53,6 +54,9 @@ const TABLE_ROWS = [
 
 
 
+
+
+
 export default function StocksList() {
   return (
     <Card className="h-full w-full">
@@ -75,9 +79,8 @@ export default function StocksList() {
             {/* <Button variant="outlined" size="sm">
               view tanks
             </Button> */}
-            <Button className="flex items-center gap-3" size="sm">
-              <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add Tank
-            </Button>
+              <AddStock/>
+          
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">

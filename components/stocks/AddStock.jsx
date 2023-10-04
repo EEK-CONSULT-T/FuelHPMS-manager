@@ -103,34 +103,56 @@ const AddStock = () => {
 
   //fetch all tanks from firestore
 
+
+  
+
   const handleAddStock = async (e) => {
     e.preventDefault();
 
     try {
-      const docRef = doc(db, "tanks", tank.id);
-      const tankData = {
-        id: tank.id,
-        name: tank.name,
-        current_volume: parseFloat(tank.current_volume),
-        station: user?.station_id,
-        pumps: tank.pumps,
+      const docRef = doc(db, "stocks", stock.id);
+      const stockData = {
+        id: stock.id,
+        tank: tank.id,
         fuel_type: tank.fuel_type,
-        //take selected date and convert to timestamp
-        last_refilled: tank.last_refilled,
+        opening_volume: stock.opening_volume,
+        closing_volume: stock.closing_volume,
+        old_price: stock.old_price,
+        new_price: stock.new_price,
+        pump://store the pump object in the stock
+        {
+          id: stock.pump,
+          name: tank.pumps.find((pump) => pump.id === stock.pump)?.name,
+        },
+        
+
+        opening_time: stock.opening_time,
+        closing_time: stock.closing_time,
+        date_created: Timestamp.fromDate(new Date()),
+        station: user?.station_id,
+    
+      
       };
 
-      await setDoc(docRef, tankData);
-      toast.success("Tank created successfully");
+      await setDoc(docRef, stockData);
+      toast.success("Stock created successfully");
 
       handleOpen();
 
       //empty fields
-      setTank({
+      setStock({
         id: nanoid(),
-        name: "",
-        fuel_type: "",
-        current_volume: "",
-        last_refilled: "",
+        //this takes an integer
+        tank: "",
+        opening_volume: "",
+        closing_volume: "",
+        old_price: "",
+        new_price: "",
+        pump: "",
+        opening_time : "",
+        closing_time: "",
+        date_created: "",
+        station: "",
       });
 
       //console.log("Document written with ID: ", docRef.id);
@@ -181,40 +203,53 @@ useEffect(() => {
                 <div className="m-2">
                   <label htmlFor=""> Current Volume(litres)</label>
                   <input
-                    min={1}
+                    min={0}
+                    step={0.01}
                     type="number"
                     placeholder="Tank Current Volume"
                     className="border-2 border-gray-300 p-2 rounded-lg w-full"
                     required
                     name="opening_volume"
-                    onChange={handleInputChange}
-                    value=""
+                    onChange={(e) =>
+                      setStock({
+                        ...stock,
+                        opening_volume: parseFloat(e.target.value),
+                      })
+                    }
+                    value={stock.opening_volume}
                   />
                 </div>
                 <div className="m-2">
                   <label htmlFor="">Old Price (per litre)</label>
                   <input
-                    min={1}
+                    min={0}
+                    step={0.01}
                     type="number"
-                    placeholder="Tank Current Volume"
+                    placeholder="Old Price (per litre)"
                     className="border-2 border-gray-300 p-2 rounded-lg w-full"
                     required
-                    name="current_volume"
-                    onChange={handleInputChange}
-                    value={tank.current_volume}
+                    name="old_price"
+                    onChange={(e) =>
+                      setStock({
+                        ...stock,
+                        old_price: parseFloat(e.target.value),
+                      })
+                    }
+                    value={stock.old_price}
                   />
                 </div>
                 <div className="m-2">
                   <label htmlFor="">Opening Time</label>
                   <input
-                    min={1}
                     type="time"
-                    placeholder="Tank Current Volume"
+                    placeholder="Opening Time"
                     className="border-2 border-gray-300 p-2 rounded-lg w-full"
                     required
-                    name="current_volume"
-                    onChange={handleInputChange}
-                    value={tank.current_volume}
+                    name="opening_time"
+                    onChange={(e) =>
+                      setStock({ ...stock, opening_time: e.target.value })
+                    }
+                    value={stock.opening_time}
                   />
                 </div>
               </div>
@@ -222,38 +257,50 @@ useEffect(() => {
                 <div className="m-2">
                   <label htmlFor="">Closing Volume(litres)</label>
                   <input
-                    min={1}
+                    min={0}
+                    step={0.01}
                     type="number"
-                    placeholder="Tank Current Volume"
+                    placeholder="Closing Volume (litres)"
                     className="border-2 border-gray-300 p-2 rounded-lg w-full"
-                    required
-                    name="opening_volume"
-                    onChange={handleInputChange}
-                    value=""
+                    name="closing_volume"
+                    onChange={(e) =>
+                      setStock({
+                        ...stock,
+                        closing_volume: parseFloat(e.target.value),
+                      })
+                    }
+                    value={stock.closing_volume}
                   />
                 </div>
                 <div className="m-2">
                   <label htmlFor="">New Price (per litre)</label>
                   <input
-                    min={1}
+                    min={0}
+                    step={0.01}
                     type="number"
-                    placeholder="Tank Current Volume"
+                    placeholder="New Price (per litre)"
                     className="border-2 border-gray-300 p-2 rounded-lg w-full"
-                    required
-                    name="current_volume"
-                    onChange={handleInputChange}
-                    value={tank.current_volume}
+                    name="new_price"
+                    onChange={(e) =>
+                      setStock({
+                        ...stock,
+                        new_price: parseFloat(e.target.value),
+                      })
+                    }
+                    value={stock.new_price}
                   />
                 </div>
                 <div className="m-2">
                   <label htmlFor="">Closing Time</label>
                   <input
                     type="time"
+                    placeholder="Closing Time"
                     className="border-2 border-gray-300 p-2 rounded-lg w-full"
-                    required
                     name="closing_time"
-                    onChange={handleInputChange}
-                    value={tank.current_volume}
+                    onChange={(e) =>
+                      setStock({ ...stock, closing_time: e.target.value })
+                    }
+                    value={stock.closing_time}
                   />
                 </div>
               </div>
@@ -261,9 +308,7 @@ useEffect(() => {
               {/**display all fetched tanks */}
 
               <div className="m-2 flex-col flex">
-                <label htmlFor="">
-                  Select
-                </label>
+                <label htmlFor="">Select</label>
                 <select
                   className="w-full py-3 rounded-lg border-2 border-gray-300 px-4"
                   label="Select Tank"
@@ -290,18 +335,23 @@ useEffect(() => {
                 <select
                   className="w-full py-3 rounded-lg border-2 border-gray-300 px-4"
                   label="Select Pump"
-                  value={tank.pump}
-                  onChange={handleSelectChange}
+                  value={stock.pump}
+                  onChange={(e) => setStock({ ...stock, pump: e.target.value })}
                   name="pump"
                   required
                 >
-                  <option value={""} disabled>
+                  <option value="" disabled>
                     Select Pump
                   </option>
                   {tank.pumps.map((pump) => (
-                    <option key={pump.id} value={pump.id}>
-                      {pump.name}
-                    </option>
+                    <>
+                      <option value="" disabled>
+                        Select Pump
+                      </option>
+                      <option key={pump.id} value={pump.id}>
+                        {pump.name}
+                      </option>
+                    </>
                   ))}
                 </select>
               </div>

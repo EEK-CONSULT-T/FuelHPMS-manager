@@ -3,6 +3,7 @@ import { Avatar } from '@material-tailwind/react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { useRouter } from 'next/router';
 import React, { use, useEffect, useState } from 'react'
+import toast from 'react-hot-toast';
 
 const EmployeeDetails = () => {
     const [employee, setEmployee] = useState({});

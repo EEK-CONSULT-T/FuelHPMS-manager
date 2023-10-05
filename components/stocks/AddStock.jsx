@@ -11,7 +11,7 @@ import {
   Select,
 } from "@material-tailwind/react";
 import { toast } from "react-hot-toast";
-import { Timestamp, collection, doc, onSnapshot, query, setDoc, where } from "firebase/firestore";
+import { Timestamp, collection, deleteDoc, doc, onSnapshot, query, setDoc, where } from "firebase/firestore";
 import { db, storage } from "@/firebase/config";
 import { nanoid } from "nanoid";
 
@@ -28,14 +28,16 @@ const AddStock = () => {
     tank: "",
     fuel_type: "",
     opening_volume: "",
-    closing_volume: "",
-    old_price: "",
-    new_price: "",
+    closing_volume: 0,
+    price: "",
+    date: "",
+    shortage: 0,
+    sales: 0,
     pump: "",
     opening_time : "",
     closing_time: "",
-    date_created: "",
     station: "",
+    amount: 0,
 
   });
 
@@ -58,6 +60,7 @@ const AddStock = () => {
 
     current_volume: "",
     pumps: [],
+
 
     fuel_type: "",
     station: "",
@@ -94,13 +97,15 @@ const AddStock = () => {
 
   //handle selected category
 
- const handleSelectChange = (e) => {
-   const { name, value } = e.target;
-   const selectedTank = tanks.find((tank) => tank.id === value);
-   setTank({ ...tank, [name]: value, pumps: selectedTank?.pumps || [] });
- };
+const handleSelectChange = (e) => {
+  const { name, value } = e.target;
+  const selectedTank = tanks.find((tank) => tank.id === value);
 
-
+  // Extract the fuel_type from the selected tank and set it in the stock state
+  const fuelType = selectedTank ? selectedTank.fuel_type : "";
+  setTank({ ...tank, [name]: value, pumps: selectedTank?.pumps || [] });
+  setStock({ ...stock, fuel_type: fuelType }); // Set the fuel_type in the stock state
+};
   //fetch all tanks from firestore
 
 
@@ -113,12 +118,11 @@ const AddStock = () => {
       const docRef = doc(db, "stocks", stock.id);
       const stockData = {
         id: stock.id,
-        tank: tank.id,
-        fuel_type: tank.fuel_type,
         opening_volume: stock.opening_volume,
-        closing_volume: stock.closing_volume,
-        old_price: stock.old_price,
-        new_price: stock.new_price,
+         fuel_type: stock.fuel_type,
+
+        //closing_volume: parseFloat(stock.closing_volume),
+        price: stock.price,
         pump://store the pump object in the stock
         {
           id: stock.pump,
@@ -127,9 +131,11 @@ const AddStock = () => {
         
 
         opening_time: stock.opening_time,
-        closing_time: stock.closing_time,
-        date_created: Timestamp.fromDate(new Date()),
+      //  closing_time: stock.closing_time,
+        date:stock.date,  
         station: user?.station_id,
+        //sales: (stock.opening_volume - stock.closing_volume),
+       // amount: (stock.opening_volume - stock.closing_volume) * stock.price,
     
       
       };
@@ -146,12 +152,12 @@ const AddStock = () => {
         tank: "",
         opening_volume: "",
         closing_volume: "",
-        old_price: "",
-        new_price: "",
+        price: "",
+        fuel_type: "",
         pump: "",
         opening_time : "",
         closing_time: "",
-        date_created: "",
+        date: "",
         station: "",
       });
 
@@ -220,7 +226,7 @@ useEffect(() => {
                   />
                 </div>
                 <div className="m-2">
-                  <label htmlFor="">Old Price (per litre)</label>
+                  <label htmlFor="">Price (per litre)</label>
                   <input
                     min={0}
                     step={0.01}
@@ -232,10 +238,10 @@ useEffect(() => {
                     onChange={(e) =>
                       setStock({
                         ...stock,
-                        old_price: parseFloat(e.target.value),
+                        price: parseFloat(e.target.value),
                       })
                     }
-                    value={stock.old_price}
+                    value={stock.price}
                   />
                 </div>
                 <div className="m-2">
@@ -254,7 +260,7 @@ useEffect(() => {
                 </div>
               </div>
               <div className="flex items-center justify-">
-                <div className="m-2">
+                {/* <div className="m-2">
                   <label htmlFor="">Closing Volume(litres)</label>
                   <input
                     min={0}
@@ -271,8 +277,8 @@ useEffect(() => {
                     }
                     value={stock.closing_volume}
                   />
-                </div>
-                <div className="m-2">
+                </div> */}
+                {/* <div className="m-2">
                   <label htmlFor="">New Price (per litre)</label>
                   <input
                     min={0}
@@ -289,8 +295,22 @@ useEffect(() => {
                     }
                     value={stock.new_price}
                   />
-                </div>
+                </div> */}
+
                 <div className="m-2">
+                  <label htmlFor="">Date</label>
+                  <input
+                    type="date"
+                    placeholder="Date"
+                    className="border-2 border-gray-300 p-2 rounded-lg w-full"
+                    name="date"
+                    onChange={(e) =>
+                      setStock({ ...stock, date: e.target.value })
+                    }
+                    value={stock.date}
+                  />
+                </div>
+                {/* <div className="m-2">
                   <label htmlFor="">Closing Time</label>
                   <input
                     type="time"
@@ -302,7 +322,7 @@ useEffect(() => {
                     }
                     value={stock.closing_time}
                   />
-                </div>
+                </div> */}
               </div>
 
               {/**display all fetched tanks */}

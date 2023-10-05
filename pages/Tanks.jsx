@@ -180,6 +180,86 @@ const Tanks = () => {
 
 export default Tanks;
 
+  // const fetchInvestors = async () => {
+  //   setLoading(true);
+  //   try {
+  //     //firestore in real time
+  //     const q = query(collection(db, "investors"));
+  //     const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //       const documents = [];
+  //       querySnapshot.forEach((doc) => {
+  //         documents.push({ ...doc.data(), id: doc.id });
+  //       });
+  //       setInvestors(documents);
+  //       console.log(documents);
+  //       setLoading(false);
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const fetchInvestmentTotal = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const q = query(collection(db, "investors"));
+  //     const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //       const documents = [];
+  //       let totalAmountValue = 0;
+
+  //       querySnapshot.forEach((doc) => {
+  //         const data = doc.data();
+  //         documents.push({ ...data, id: doc.id });
+  //         totalAmountValue += data.amount || 0; // Assuming the field name is 'amount'
+  //       });
+
+  //       setInvestors(documents);
+  //       setTotalAmount(totalAmountValue);
+  //       console.log("totalAmountValue", totalAmountValue); // This will be the sum of all the 'amount' fields
+
+  //       console.log(documents);
+  //       setLoading(false);
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoading(false);
+  //   }
+  // };
+
+  // const fetchReturnsTotal = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const q = query(collection(db, "investors"));
+  //     const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //       const documents = [];
+  //       let totalReturnsValue = 0;
+
+  //       querySnapshot.forEach((doc) => {
+  //         const data = doc.data();
+  //         documents.push({ ...data, id: doc.id });
+  //         totalReturnsValue += data.investmentReturn || 0; // Assuming the field name is 'amount'
+  //       });
+
+  //       setInvestors(documents);
+  //       setTotalReturns(totalReturnsValue);
+  //       console.log("totalReturnsValue", totalReturnsValue); // This will be the sum of all the 'amount' fields
+
+  //       console.log(documents);
+  //       setLoading(false);
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //     setLoading(false);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchInvestors();
+  //   fetchInvestmentTotal();
+  //   fetchReturnsTotal();
+  // }, []);
+
 // import React, { useEffect, useState } from "react";
 // import {
 //   collection,

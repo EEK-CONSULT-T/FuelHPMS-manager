@@ -236,18 +236,17 @@ const fetchExpenditure = async () => {
               <BsCashCoin size={60} className="p-4   text-gray-600" />
             </div>
             <div className="flex flex-col w-full ">
-              
-            <p className="text-2xl font-bold">
+              <p className="text-2xl font-bold">
                 Ghc{" "}
                 {totalexpenditure.toLocaleString(undefined, {
                   minimumFractionDigits: 2,
                 })}
-              </p> 
+              </p>
               <p className="text-gray-600">Total Expenditure</p>
             </div>
           </div>
         </div>
-       
+
         {/* <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex items-center rounded">
             <div className=" flex items-center m-2 rounded-lg">
@@ -265,9 +264,7 @@ const fetchExpenditure = async () => {
               <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
             </div>
             <div className="flex flex-col w-full ">
-              <p className="text-2xl font-bold">
-                {employees.toLocaleString()}
-              </p>
+              <p className="text-2xl font-bold">{employees.toLocaleString()}</p>
               <p className="text-gray-600">Total Employees</p>
             </div>
           </div>
@@ -278,27 +275,81 @@ const fetchExpenditure = async () => {
               <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
             </div>
             <div className="flex flex-col w-full ">
-              <p className="text-2xl font-bold">
-              2000 litres
+              <p className="text-2xl font-bold">2000 Ghc</p>
+              <p className="text-gray-600">
+                Net Sales
               </p>
+            </div>
+          </div>
+        </div>
+        <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
+          <div className="flex items-center rounded">
+            <div className=" flex items-center m-2 rounded-lg">
+              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
+            </div>
+            <div className="flex flex-col w-full ">
+              <p className="text-2xl font-bold">2000 Ghc</p>
+              <p className="text-gray-600">
+                Gross Profit
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
+          <div className="flex items-center rounded">
+            <div className=" flex items-center m-2 rounded-lg">
+              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
+            </div>
+            <div className="flex flex-col w-full ">
+              <p className="text-2xl font-bold">2000 litres</p>
               <p className="text-gray-600">Total Stocks</p>
             </div>
           </div>
         </div>
-        {/* <div className="bg-white flex justify-between w-full border p-4 rounded-lg">
+        <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex items-center rounded">
             <div className=" flex items-center m-2 rounded-lg">
-              <FaBell size={60} className="p-4 text-gray-400 rounded-md " />
+              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
             </div>
             <div className="flex flex-col w-full ">
-              <p className="text-2xl font-bold">
-                {totalNotifications.toLocaleString()}
-              </p>
-              <p className="text-gray-600">Total 
-              </p>
+              <p className="text-2xl font-bold">2000 litres</p>
+              <p className="text-gray-600">Total Stocks</p>
             </div>
           </div>
-        </div> */}
+        </div>
+        <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
+          <div className="flex items-center rounded">
+            <div className=" flex items-center m-2 rounded-lg">
+              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
+            </div>
+            <div className="flex flex-col w-full ">
+              <p className="text-2xl font-bold">2000 litres</p>
+              <p className="text-gray-600">Total Stocks</p>
+            </div>
+          </div>
+        </div>
+        <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
+          <div className="flex items-center rounded">
+            <div className=" flex items-center m-2 rounded-lg">
+              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
+            </div>
+            <div className="flex flex-col w-full ">
+              <p className="text-2xl font-bold">2000 litres</p>
+              <p className="text-gray-600">Total Stocks</p>
+            </div>
+          </div>
+        </div>
+        <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
+          <div className="flex items-center rounded">
+            <div className=" flex items-center m-2 rounded-lg">
+              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
+            </div>
+            <div className="flex flex-col w-full ">
+              <p className="text-2xl font-bold">2000 litres</p>
+              <p className="text-gray-600">Total Stocks</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

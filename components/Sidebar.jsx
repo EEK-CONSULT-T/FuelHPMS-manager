@@ -290,6 +290,14 @@ export default function Sidebar({ children }) {
                 Sales
               </ListItem>
             </Link>
+            <Link href="/Waybill">
+              <ListItem>
+                <ListItemPrefix>
+                  <UserCircleIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                Purchases 
+              </ListItem>
+            </Link>
             <Link href="/Expenses">
               <ListItem>
                 <ListItemPrefix>

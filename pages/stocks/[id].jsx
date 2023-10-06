@@ -106,11 +106,19 @@ const StockDetails = () => {
               <hr className="" />
               <div className="py-8 flex justify-between max-w-xl">
                 <p>
-                  <span className="font-bold text-gray-700">
-                    Sales Litres:
-                  </span>
+                  <span className="font-bold text-gray-700">Sales Litres:</span>
                 </p>
                 <p className="">{stock.sales} litres</p>
+              </div>
+              <hr />
+            </div>
+            <div>
+              <hr className="" />
+              <div className="py-8 flex justify-between max-w-xl">
+                <p>
+                  <span className="font-bold text-gray-700">Date:</span>
+                </p>
+                <p className="">{stock.amount} Ghc</p>
               </div>
               <hr />
             </div>

@@ -44,7 +44,8 @@ export default function StocksList() {
   const [open, setOpen] = useState(false);
   const [closingVolume, setClosingVolume] = useState("");
   const [closingTime, setClosingTime] = useState("");
-  const [shortage, setShortage] = useState(0);
+  const [amountPaid, setAmountPaid] = useState(0);
+
 
 
 
@@ -66,8 +67,33 @@ export default function StocksList() {
   const [totalSuperShortage, setTotalSuperShortage] = useState(0);
   const [totalDieselShortage, setTotalDieselShortage] = useState(0);
   const [totalKeroseneShortage, setTotalKeroseneShortage] = useState(0);
-  
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredStocks, setFilteredStocks] = useState([]);
 
+
+
+  const handleDateFromChange = (e) => {
+    setDateFrom(e.target.value);
+  };
+
+  const handleDateToChange = (e) => {
+    setDateTo(e.target.value);
+  };
+
+const handleSearchQueryChange = (e) => {
+  setSearchQuery(e.target.value);
+};
+
+useEffect(() => {
+  // Update the filtered stocks when stocks change
+  setFilteredStocks(
+    stocks.filter((stock) =>
+      stock.pump.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+}, [stocks, searchQuery]);
 
   const fetchStocks = async () => {
     try {
@@ -109,9 +135,13 @@ export default function StocksList() {
     fetchTotals();
   }, []);
 
+  useEffect(() => {
+    filterStocks();
+  }, [stocks, searchQuery, dateFrom, dateTo]);
+
+
   const sales = selectedStock?.opening_volume - closingVolume;
   const amount = sales * selectedStock?.price;
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -123,8 +153,8 @@ export default function StocksList() {
         closing_time: e.target.closing_time.value,
         sales: sales,
         amount: amount,
-        shortage: parseInt(e.target.shortage.value),
-        
+        amount_paid: parseInt(e.target.amount_paid.value),
+        shortage: amount - parseInt(e.target.amount_paid.value),
       };
 
       const stockRef = doc(db, "stocks", selectedStock.id);
@@ -225,6 +255,18 @@ const handleDeleteStock = async (id) => {
   }
 }
 
+const filterStocks = () => {
+  const filtered = stocks.filter((stock) => {
+    const pumpNameMatches = stock.pump.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const dateMatches =
+      (!dateFrom || stock.date >= dateFrom) &&
+      (!dateTo || stock.date <= dateTo);
+    return pumpNameMatches && dateMatches;
+  });
+  setFilteredStocks(filtered);
+};
 
 
   return (
@@ -417,13 +459,34 @@ const handleDeleteStock = async (id) => {
               <Typography color="gray" className="mt-1 font-normal">
                 See information about all members
               </Typography>
+
+              <div className="flex gap-4">
+                <div className="">
+                  <label htmlFor="category" className="py-1 ">
+                    Date from
+                  </label>
+                  <Input
+                    type="date"
+                    className="border-2 px-4 "
+                    value={dateFrom}
+                    onChange={handleDateFromChange}
+                  />
+                </div>
+                <div className="">
+                  <label htmlFor="category" className="py-1 ">
+                    Date to
+                  </label>
+                  <Input
+                    type="date"
+                    className="border-2 px-4 "
+                    value={dateTo}
+                    onChange={handleDateToChange}
+                  />
+                </div>
+                <div></div>
+              </div>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-              <Link href="/Pricing">
-                <Button variant="outlined" size="sm" color="green">
-                  Update Pricing
-                </Button>
-              </Link>
               {/* <Button variant="outlined" size="sm">
               view tanks
             </Button> */}
@@ -431,19 +494,13 @@ const handleDeleteStock = async (id) => {
             </div>
           </div>
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <div className="flex items-center gap-2">
-              <Typography
-                variant="small"
-                color="blue-gray"
-                className="font-normal"
-              >
-                Update Pricing
-              </Typography>
-            </div>
+            <div className="flex items-center gap-2"></div>
 
             <div className="w-full md:w-72">
               <Input
-                label="Search"
+                label="Search Pump Name"
+                value={searchQuery}
+                onChange={handleSearchQueryChange}
                 icon={<MagnifyingGlassIcon className="h-5 w-5" />}
               />
             </div>
@@ -466,7 +523,7 @@ const handleDeleteStock = async (id) => {
             </tr>
           </thead>
           <tbody>
-            {stocks.map((tank, index) => (
+            {filteredStocks.map((tank, index) => (
               <tr className="text-gray-700" key={tank.id}>
                 <td className="px-4 py-3 border">
                   <div className="flex items-center text-sm">
@@ -509,19 +566,19 @@ const handleDeleteStock = async (id) => {
                 <td className="px-4 py-3 border flex ">
                   {tank.closing_volume > 0 ? (
                     <>
-                    <Link href={`/stocks/${tank.id}`}>
-                      <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                        View Details
+                      <Link href={`/stocks/${tank.id}`}>
+                        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                          View Details
+                        </button>
+                      </Link>
+
+                      <button
+                        className="bg-red-600 text-white px-4 py-2 rounded-lg ml-4"
+                        onClick={() => handleDeleteStock(tank.id)}
+                      >
+                        Delete
                       </button>
-
-
-                    </Link>
-
-                    <button className="bg-red-600 text-white px-4 py-2 rounded-lg ml-4" onClick={() => handleDeleteStock(tank.id)}>
-                      Delete
-                    </button>
                     </>
-
                   ) : (
                     <button
                       className="bg-green-600 text-white px-4 py-2 rounded-lg"
@@ -531,8 +588,6 @@ const handleDeleteStock = async (id) => {
                     </button>
                   )}
                 </td>
-
-              
               </tr>
             ))}
           </tbody>
@@ -630,14 +685,14 @@ const handleDeleteStock = async (id) => {
                 </label>
                 <label className="block">
                   <span className="text-gray-700">
-                    Shortage (Ghc) <br />
+                    Amount Paid <br />
+                    (Ghc) <br />
                   </span>
                   <input
                     type="number"
-                    name="shortage"
-                    id="shortage"
+                    name="amount_paid"
                     min={0}
-                    value={selectedStock ? selectedStock.shortage : ""}
+                    value={selectedStock ? selectedStock.amount_paid : ""}
                     step={0.01}
                     className="block w-full mt-1 form-input py-3 px-3 border-2 rounded-xl"
                   />
@@ -657,6 +712,22 @@ const handleDeleteStock = async (id) => {
                   />
                 </label>
               </div>
+
+              {/* <div className="flex items-center gap-4 ">
+                <label className="block">
+                  <span className="text-gray-700">
+                    Amount to be paid <br />
+                  </span>
+                     <div>
+                  <p className="text-xl font-bold">
+          Ghc    {
+              amount
+              }
+                  </p>
+                  
+                     </div>
+                     </label>
+                     </div> */}
 
               <div className="flex justify-end mt-6">
                 <button

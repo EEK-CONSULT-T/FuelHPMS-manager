@@ -5,22 +5,18 @@ import { useRouter } from "next/router";
 import React, { use, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-const StockDetails = () => {
+const PurchaseDetails = () => {
   const [stock, setStock] = useState({});
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const { id } = router.query;
 
-
-
-  
-
   useEffect(() => {
     setLoading(true);
 
     try {
-      const docRef = doc(db, "stocks", id);
+      const docRef = doc(db, "purchases", id);
 
       const unsubscribe = onSnapshot(docRef, (docSnap) => {
         if (docSnap.exists()) {
@@ -45,7 +41,9 @@ const StockDetails = () => {
   return (
     <div className="p-8 w-full shadow-lg">
       <div>
-        <h2 className="font-bold text-xl">Stock Details</h2>
+        <h2 className="font-bold text-xl">
+           Purchase
+           Details</h2>
         {stock && (
           <>
             <div>
@@ -53,20 +51,10 @@ const StockDetails = () => {
               <div className="py-8 flex justify-between max-w-xl">
                 <p>
                   <span className="font-bold text-gray-700">
-                    Opening Litres
+                    Quantity Purchased:
                   </span>
                 </p>
-                <p className="">{stock.opening_volume} litres</p>
-              </div>
-              <hr />
-            </div>
-            <div>
-              <hr className="" />
-              <div className="py-8 flex justify-between max-w-xl">
-                <p>
-                  <span className="font-bold text-gray-700">Opening Time:</span>
-                </p>
-                <p className="">{stock.opening_time} am</p>
+                <p className="">{stock.quantity} litres</p>
               </div>
               <hr />
             </div>
@@ -75,10 +63,26 @@ const StockDetails = () => {
               <div className="py-8 flex justify-between max-w-xl">
                 <p>
                   <span className="font-bold text-gray-700">
-                    Closing Litres:
+                     Cost Per Litre:
+                    </span>
+                </p>
+                <p className="">
+                  {stock.cost_litre} Ghc
+                </p>
+              </div>
+              <hr />
+            </div>
+            <div>
+              <hr className="" />
+              <div className="py-8 flex justify-between max-w-xl">
+                <p>
+                  <span className="font-bold text-gray-700">
+                    Selling Price Per Litre:
                   </span>
                 </p>
-                <p className="">{stock.closing_volume} litres</p>
+                <p className="">
+                  {stock.sell_litre} Ghc
+                </p>
               </div>
               <hr />
             </div>
@@ -86,9 +90,13 @@ const StockDetails = () => {
               <hr className="" />
               <div className="py-8 flex justify-between max-w-xl">
                 <p>
-                  <span className="font-bold text-gray-700">Shortage:</span>
+                  <span className="font-bold text-gray-700">
+                    Total Cost:
+                  </span>
                 </p>
-                <p className="">{stock.shortage} Ghc</p>
+                <p className="">
+                  {stock.cost_total} Ghc
+                </p>
               </div>
               <hr />
             </div>
@@ -96,9 +104,13 @@ const StockDetails = () => {
               <hr className="" />
               <div className="py-8 flex justify-between max-w-xl">
                 <p>
-                  <span className="font-bold text-gray-700">Closing Time:</span>
+                  <span className="font-bold text-gray-700">
+                    profit:
+                  </span>
                 </p>
-                <p className="">{stock.closing_time} pm</p>
+                <p className="">
+                  {stock.profit} Ghc
+                </p>
               </div>
               <hr />
             </div>
@@ -106,9 +118,13 @@ const StockDetails = () => {
               <hr className="" />
               <div className="py-8 flex justify-between max-w-xl">
                 <p>
-                  <span className="font-bold text-gray-700">Sales Litres:</span>
+                  <span className="font-bold text-gray-700">
+                    Supplier Name:
+                  </span>
                 </p>
-                <p className="">{stock.sales} litres</p>
+                <p className="">
+                  {stock.supplier}
+                </p>
               </div>
               <hr />
             </div>
@@ -118,20 +134,13 @@ const StockDetails = () => {
                 <p>
                   <span className="font-bold text-gray-700">Date:</span>
                 </p>
-                <p className="">{stock.date}</p>
-              </div>
-              <hr />
-            </div>
-            <div>
-              <hr className="" />
-              <div className="py-8 flex justify-between max-w-xl">
-                <p>
-                  <span className="font-bold text-gray-700">Amount:</span>
+                <p className="">
+                  {stock.date}
                 </p>
-                <p className="">{stock.amount} Ghc</p>
               </div>
               <hr />
             </div>
+            
           </>
         )}
       </div>
@@ -139,4 +148,4 @@ const StockDetails = () => {
   );
 };
 
-export default StockDetails;
+export default PurchaseDetails;

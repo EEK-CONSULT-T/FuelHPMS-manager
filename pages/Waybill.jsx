@@ -41,7 +41,6 @@ export default function PurchaseList() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
-  const [closingVolume, setClosingVolume] = useState("");
 
   const [selectedPurchase, setSelectedPurchase] = useState(null);
   const handleOpen = (purchase) => {
@@ -49,13 +48,31 @@ export default function PurchaseList() {
     setOpen(true);
   };
 
-  const [totalAmount, setTotalAmount] = useState(0);
 
-  const [superTotalAmount, setSuperTotalAmount] = useState(0);
+  
+  const [totalQuantity, setTotalQuantity] = useState(0);
+  const [totalDieselQuantity, setTotalDieselQuantity] = useState(0);
+  const [totalKeroseneQuantity, setTotalKeroseneQuantity] = useState(0);
+  const [totalSuperQuantity, setTotalSuperQuantity] = useState(0);
+
+  const [totalDieselProfit, setTotalDieselProfit] = useState(0);
+  const [totalKeroseneProfit, setTotalKeroseneProfit] = useState(0);
+  const [totalSuperProfit, setTotalSuperProfit] = useState(0);
+
+  const [totalProfit , setTotalProfit] = useState(0);
+
+
+  
+
 
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+const [filteredPurchases, setFilteredPurchases] = useState([]);
+const [selectedFuelType, setSelectedFuelType] = useState("");
+const [selectedSupplier, setSelectedSupplier] = useState("");
+
+
  
     
 
@@ -71,14 +88,7 @@ export default function PurchaseList() {
     setSearchQuery(e.target.value);
   };
 
-  // useEffect(() => {
-  //   // Update the filtered stocks when stocks change
-  //   setFilteredPurchases(
-  //     purchases.filter((purchase) =>
-  //       stock.pump.name.toLowerCase().includes(searchQuery.toLowerCase())
-  //     )
-  //   );
-  // }, [stocks, searchQuery]);
+
 
   const fetchPurchases = async () => {
     try {
@@ -117,134 +127,99 @@ export default function PurchaseList() {
 
   useEffect(() => {
     fetchPurchases();
-   // fetchTotals();
+    fetchTotals();
   }, []);
 
-  // useEffect(() => {
-  //   filterStocks();
-  // }, [purchases, searchQuery, dateFrom, dateTo]);
 
-  // const sales = selectedStock?.opening_volume - closingVolume;
-  // const amount = sales * selectedStock?.price;
+ const filterPurchases = () => {
+   const filtered = purchases.filter((purchase) => {
+     const fuelTypeMatches =
+       purchase.fuel_type.toLowerCase().includes(searchQuery.toLowerCase()) &&
+       (!selectedFuelType || purchase.fuel_type === selectedFuelType ) &&
+        (!selectedSupplier || purchase.supplier === selectedSupplier);
+     const dateMatches =
+       (!dateFrom || purchase.date >= dateFrom) &&
+       (!dateTo || purchase.date <= dateTo);
+     return fuelTypeMatches && dateMatches;
+   });
+   setFilteredPurchases(filtered);
+ };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
 
-  //   try {
-  //     const updatedStock = {
-  //       ...selectedStock,
-  //       closing_volume: parseInt(e.target.closing_volume.value),
-  //       closing_time: e.target.closing_time.value,
-  //       sales: sales,
-  //       amount: amount,
-  //       amount_paid: parseInt(e.target.amount_paid.value),
-  //       shortage: amount - parseInt(e.target.amount_paid.value),
-  //     };
+useEffect(() => {
+  filterPurchases(); // Call the filtering function
+}, [purchases, searchQuery, dateFrom, dateTo, selectedFuelType, selectedSupplier]);
 
-  //     const stockRef = doc(db, "stocks", selectedStock.id);
 
-  //     await updateDoc(stockRef, updatedStock);
 
-  //     setOpen(false);
-  //     toast.success("Stock updated successfully");
-  //     setSelectedStock(null);
-  //   } catch (error) {
-  //     console.error("Error updating stock:", error);
-  //   }
-  // };
+const fetchTotals = async () => {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
+    const stationId = user?.station_id;
 
-  // const fetchTotals = async () => {
-  //   try {
-  //     const user = JSON.parse(localStorage.getItem("user"));
-  //     const stationId = user?.station_id; // Assuming station_id is stored in the user object
+    console.log("stationId", stationId);
 
-  //     console.log("stationId", stationId);
+    if (stationId) {
+      const q = query(
+        collection(db, "purchases"),
+        where("station", "==", stationId)
+      );
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        let totalQuantityValue = 0;
+        let totalDieselQuantityValue = 0;
+        let totalDieselProfitValue = 0;
+        let totalKeroseneQuantityValue = 0;
+        let totalKeroseneProfitValue = 0;
+        let totalSuperQuantityValue = 0;
+        let totalSuperProfitValue = 0;
+        let totalProfitValue = 0; // Define totalProfitValue
 
-  //     if (stationId) {
-  //       const q = query(
-  //         collection(db, "stocks"),
-  //         where("station", "==", stationId)
-  //       );
-  //       const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  //         let totalAmountValue = 0;
-  //         let totalSalesValue = 0;
-  //         let totalSuperAmountValue = 0;
-  //         let totalDieselAmountValue = 0;
-  //         let totalKeroseneAmountValue = 0;
-  //         let totalSuperSalesValue = 0;
-  //         let totalDieselSalesValue = 0;
-  //         let totalKeroseneSalesValue = 0;
-  //         let totalSuperShortageValue = 0;
-  //         let totalDieselShortageValue = 0;
-  //         let totalKeroseneShortageValue = 0;
+        querySnapshot.forEach((doc) => {
+          const purchase = doc.data();
+          totalQuantityValue += purchase.quantity || 0;
+          totalProfitValue += purchase.profit || 0;
 
-  //         querySnapshot.forEach((doc) => {
-  //           const stock = doc.data();
-  //           totalAmountValue += stock.amount || 0;
-  //           totalSalesValue += stock.sales || 0;
+          if (purchase.fuel_type === "Super") {
+            totalSuperQuantityValue += purchase.quantity || 0;
+            totalSuperProfitValue += purchase.profit || 0;
+          } else if (purchase.fuel_type === "Diesel") {
+            totalDieselProfitValue += purchase.profit || 0;
+            totalDieselQuantityValue += purchase.quantity || 0;
+          } else if (purchase.fuel_type === "Kerosene") {
+            totalKeroseneProfitValue += purchase.profit || 0;
+            totalKeroseneQuantityValue += purchase.quantity || 0;
+          }
+        });
 
-  //           // Calculate total sales and amount for each fuel type
-  //           if (stock.fuel_type === "Super") {
-  //             totalSuperSalesValue += stock.sales || 0;
-  //             totalSuperAmountValue += stock.amount || 0;
-  //             totalSuperShortageValue += stock.shortage || 0;
-  //           } else if (stock.fuel_type === "Diesel") {
-  //             totalDieselSalesValue += stock.sales || 0;
-  //             totalDieselAmountValue += stock.amount || 0;
-  //             totalDieselShortageValue += stock.shortage || 0;
-  //           } else if (stock.fuel_type === "Kerosene") {
-  //             totalKeroseneSalesValue += stock.sales || 0;
-  //             totalKeroseneAmountValue += stock.amount || 0;
-  //             totalKeroseneShortageValue += stock.shortage || 0;
-  //           }
-  //         });
+        setTotalQuantity(totalQuantityValue);
+        setTotalProfit(totalProfitValue);
+        setTotalDieselQuantity(totalDieselQuantityValue);
+        setTotalDieselProfit(totalDieselProfitValue);
+        setTotalKeroseneQuantity(totalKeroseneQuantityValue);
+        setTotalKeroseneProfit(totalKeroseneProfitValue);
+        setTotalSuperQuantity(totalSuperQuantityValue);
+        setTotalSuperProfit(totalSuperProfitValue);
+      });
 
-  //         setTotalAmount(totalAmountValue);
-  //         setTotalSales(totalSalesValue);
-  //         setDieselTotalAmount(totalDieselAmountValue);
-  //         setKeroseneTotalAmount(totalKeroseneAmountValue);
-  //         setSuperTotalAmount(totalSuperAmountValue);
-  //         setTotalSuperSales(totalSuperSalesValue);
-  //         setTotalDieselSales(totalDieselSalesValue);
-  //         setTotalKeroseneSales(totalKeroseneSalesValue);
-  //         setTotalSuperShortage(totalSuperShortageValue);
-  //         setTotalDieselShortage(totalDieselShortageValue);
-  //         setTotalKeroseneShortage(totalKeroseneShortageValue);
-  //       });
+      return () => {
+        unsubscribe();
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching totals", error);
+  }
+};
 
-  //       return () => {
-  //         // Unsubscribe from the listener when the component unmounts
-  //         unsubscribe();
-  //       };
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching totals", error);
-  //   }
-  // };
+
 
   const handleDeletePurchase = async (id) => {
     try {
       await deleteDoc(doc(db, "purchases", id));
-      toast.success("Stock deleted successfully");
+      toast.success("Purchase deleted successfully");
     } catch (error) {
       console.error("Error deleting purchase", error);
     }
   };
-
-  const filterPurchases = () => {
-     const filtered = purchases.filter((purchase) => {
-       const pumpNameMatches = purchase.pump.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      const dateMatches =
-        (!dateFrom || purchase.date >= dateFrom) &&
-        (!dateTo || purchase.date <= dateTo);
-      return pumpNameMatches && dateMatches;
-    });
-     setFilteredStocks(filtered);
-  };
-
-  
 
   return (
     <>
@@ -262,8 +237,87 @@ export default function PurchaseList() {
                       <h2 class="text-gray-900 text-lg title-font font-medium">
                         {/* {totalAmount} */}
                         {/* {investors.length} */}
+                        {totalQuantity} (litres)
                       </h2>
-                      <p class="leading-relaxed text-base">Total Purchases</p>
+                      <p class="leading-relaxed text-base">Total Quantity</p>
+                    </div>
+                  </div>
+                  <div class="flex-grow"></div>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4">
+                <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
+                  <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsFuelPumpDiesel />
+                    </div>
+                    <div>
+                      <h2 class="text-gray-900 text-lg title-font font-medium">
+                        {/* {totalAmount} */}
+                        {/* {investors.length} */}
+                        Ghc {totalProfit}
+                      </h2>
+                      <p class="leading-relaxed text-base">Total Profit</p>
+                    </div>
+                  </div>
+                  <div class="flex-grow"></div>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4">
+                <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
+                  <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsFuelPumpDiesel />
+                    </div>
+                    <div>
+                      <h2 class="text-gray-900 text-lg title-font font-medium">
+                        {/* {totalAmount} */}
+                        {/* {investors.length} */}
+                        {totalDieselProfit}
+                      </h2>
+                      <p class="leading-relaxed text-base">
+                        Total Diesel Quantity(litres)
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex-grow"></div>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4">
+                <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
+                  <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsFuelPumpDiesel />
+                    </div>
+                    <div>
+                      <h2 class="text-gray-900 text-lg title-font font-medium">
+                        {/* {totalAmount} */}
+                        {/* {investors.length} */}
+                        {totalSuperQuantity}
+                      </h2>
+                      <p class="leading-relaxed text-base">
+                        Total Super Quantity (litres)
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex-grow"></div>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4">
+                <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
+                  <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsFuelPumpDiesel />
+                    </div>
+                    <div>
+                      <h2 class="text-gray-900 text-lg title-font font-medium">
+                        {/* {totalAmount} */}
+                        {/* {investors.length} */}
+                        {totalKeroseneQuantity}
+                      </h2>
+                      <p class="leading-relaxed text-base">
+                        Total Kerosene Quantity (litres)
+                      </p>
                     </div>
                   </div>
                   <div class="flex-grow"></div>
@@ -278,8 +332,9 @@ export default function PurchaseList() {
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
                         {/* {totalSales} */}
+                        Ghc {totalSuperProfit}
                       </h2>
-                      <h2>Total Super Purchases</h2>
+                      <h2>Total Super Profit</h2>
                     </div>
                   </div>
                   <div class="flex-grow"></div>
@@ -295,8 +350,9 @@ export default function PurchaseList() {
                       <h2 class="text-gray-900 text-lg title-font font-medium">
                         {/* {totalShortage} */}
                         {/* {totalReturns} */}
+                        GHc {totalDieselProfit}
                       </h2>
-                      <h2>Total DIesel Purchases</h2>
+                      <h2>Total DIesel Profit</h2>
                     </div>
                     {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
@@ -313,14 +369,10 @@ export default function PurchaseList() {
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
-                        {/* {superTotalAmount} */}
-                        {/* {totalReturns} */}
+                        {totalKeroseneProfit}
                       </h2>
-                      <h2>Total Kerosene Purchases</h2>
+                      <h2>Total Kerosene Profit</h2>
                     </div>
-                    {/* <h2 class="text-gray-900 text-lg title-font font-medium">
-                    Neptune
-                  </h2> */}
                   </div>
                   <div class="flex-grow"></div>
                 </div>
@@ -334,7 +386,7 @@ export default function PurchaseList() {
               <div className="mb-8 flex items-center justify-between gap-8">
                 <div>
                   <Typography variant="h5" color="blue-gray">
-                  Purchases
+                    Purchases
                   </Typography>
                   <Typography color="gray" className="mt-1 font-normal">
                     See information about all members
@@ -363,7 +415,45 @@ export default function PurchaseList() {
                         onChange={handleDateToChange}
                       />
                     </div>
-                    <div></div>
+                    <div className="flex flex-col">
+                      <label htmlFor="category" className="py-1">
+                        Fuel Type
+                      </label>
+                      <select
+                        className="border-2 px-4 py-2 rounded-lg"
+                        value={selectedFuelType}
+                        onChange={(e) => setSelectedFuelType(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Select Fuel Type
+                        </option>
+                        <option value="">All</option>
+                        <option value="Super">Super</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Kerosene">Kerosene</option>
+                      </select>
+                    </div>
+                    <div className="flex flex-col">
+                      <label htmlFor="category" className="py-1">
+                        Filter by supplier
+                      </label>
+                      <select
+                        className="border-2 px-4 py-2 rounded-lg"
+                        value={selectedSupplier}
+                        onChange={(e) => setSelectedSupplier(e.target.value)}
+                      >
+                        <option value="" disabled>
+                          Filter by supplier
+                        </option>
+                        <option value="">All</option>
+                        <option value="MOC">
+                          MOC
+                        </option>
+                        <option value="BOST">
+                          BOST
+                        </option>
+                      </select>
+                    </div>
                   </div>
                 </div>
                 <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
@@ -375,7 +465,7 @@ export default function PurchaseList() {
 
                 <div className="w-full md:w-72">
                   <Input
-                    label="Search Pump Name"
+                    label="Search Fuel Type"
                     value={searchQuery}
                     onChange={handleSearchQueryChange}
                     icon={<MagnifyingGlassIcon className="h-5 w-5" />}
@@ -388,9 +478,7 @@ export default function PurchaseList() {
                 <tr className="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
                   <th className="px-4 py-3">No.</th>
                   <th className="px-4 py-3">Fuel Type</th>
-                  <th className="px-4 py-3"> 
-                   Supplier 
-                  </th>
+                  <th className="px-4 py-3">Supplier</th>
 
                   <th className="px-4 py-3">Purchase Quantity(litres)</th>
                   <th className="px-4 py-3">Cost Per Litre (Ghc)</th>
@@ -400,51 +488,57 @@ export default function PurchaseList() {
                   <th className="px-4 py-3">Action</th>
                 </tr>
               </thead>
-              {/* <tbody>
-            {filterPurchases.map((tank, index) => (
-              <tr className="text-gray-700" key={tank.id}>
-                <td className="px-4 py-3 border">
-                  <div className="flex items-center text-sm">
-                    <div>
-                      <p className="font-semibold text-black">{index + 1}</p>
-                    </div>
-                  </div>
-                </td>
+              <tbody>
+                {filteredPurchases.map((purchase, index) => (
+                  <tr className="text-gray-700" key={purchase.id}>
+                    <td className="px-4 py-3 border">
+                      <div className="flex items-center text-sm">
+                        <div>
+                          <p className="font-semibold text-black">
+                            {index + 1}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
 
-                <td className="px-4 py-3 border">
-                  <p className="font-semibold text-black">{tank.pump.name}</p>
-                </td>
-                <td className="px-4 py-3 border">
-                  <p className="font-semibold text-black">
-                    {tank.opening_volume}
-                  </p>
-                </td>
-                <td className="px-4 py-3 border">
-                  <p className="font-semibold text-black">
-                    {tank.opening_time} AM
-                  </p>
-                </td>
-                <td className="px-4 py-3 border">
-                  <p className="font-semibold text-black">
-                    {tank.closing_volume}
-                  </p>
-                </td>
-                <td className="px-4 py-3 border">
-                  <p className="font-semibold text-black">{tank.shortage}</p>
-                </td>
+                    <td className="px-4 py-3 border">
+                      <p className="font-semibold text-black">
+                        {purchase.fuel_type}
+                      </p>
+                    </td>
 
-                <td className="px-4 py-3 border">
-                  <p className="font-semibold text-black">
-                    {tank.closing_time} PM
-                  </p>
-                </td>
-                <td className="px-4 py-3 border">
-                  <p className="font-semibold text-black">{tank.date}</p>
-                </td>
-                <td className="px-4 py-3 border flex ">
-                  {tank.closing_volume > 0 ? (
-                    <>
-                      <Link href={`/stocks/${tank.id}`}>
+                    <td className="px-4 py-3 border">
+                      <p className="font-semibold text-black">
+                        {purchase.supplier}
+                      </p>
+                    </td>
+
+                    <td className="px-4 py-3 border">
+                      <p className="font-semibold text-black">
+                        {purchase.quantity}
+                      </p>
+                    </td>
+
+                    <td className="px-4 py-3 border">
+                      <p className="font-semibold text-black">
+                        {purchase.cost_litre}
+                      </p>
+                    </td>
+
+                    <td className="px-4 py-3 border">
+                      <p className="font-semibold text-black">
+                        {purchase.sell_litre}
+                      </p>
+                    </td>
+
+                    <td className="px-4 py-3 border">
+                      <p className="font-semibold text-black">
+                        {purchase.date}
+                      </p>
+                    </td>
+
+                    <td className="px-4 py-3 border">
+                      <Link href={`/purchases/${purchase.id}`}>
                         <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
                           View Details
                         </button>
@@ -452,23 +546,14 @@ export default function PurchaseList() {
 
                       <button
                         className="bg-red-600 text-white px-4 py-2 rounded-lg ml-4"
-                        onClick={() => handleDeleteStock(tank.id)}
+                        onClick={() => handleDeletePurchase(purchase.id)}
                       >
                         Delete
                       </button>
-                    </>
-                  ) : (
-                    <button
-                      className="bg-green-600 text-white px-4 py-2 rounded-lg"
-                      onClick={() => handleOpen(tank)}
-                    >
-                      Update
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody> */}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </table>
             <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
               <Typography
@@ -488,7 +573,7 @@ export default function PurchaseList() {
               </div>
             </CardFooter>
 
-            <Dialog open={open} handler={handleOpen}>
+            {/* <Dialog open={open} handler={handleOpen}>
               <DialogHeader>
                 <Typography color="blue-gray" size="xl">
                   <h2 className="font-bold text-2xl">Update Stock</h2>
@@ -502,7 +587,7 @@ export default function PurchaseList() {
                     </span>
                     <div>
                       <p className="text-xl">
-                        {/* {selectedStock ? selectedStock.pump.name : ""} */}
+                        {/* {selectedStock ? selectedStock.pump.name : ""} 
                       </p>
                     </div>
                   </div>
@@ -584,10 +669,10 @@ export default function PurchaseList() {
                   <div className="flex justify-end mt-6">
                     <button
                       type="button"
-                      // onClick={() => {
-                      //   setSelectedStock(null);
-                      //   setOpen(false);
-                      // }}
+                     onClick={() => {
+                         setSelectedStock(null);
+                         setOpen(false);
+                       }}
                       className="px-4 py-2 text-sm font-medium text-gray-700 transition-colors duration-150 bg-gray-200 border border-transparent rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                       Cancel
@@ -601,7 +686,7 @@ export default function PurchaseList() {
                   </div>
                 </form>
               </DialogBody>
-            </Dialog>
+            </Dialog> */}
           </Card>
         </div>
       </div>

@@ -14,6 +14,9 @@ const TanksList = () => {
     const [totalDieselTanks, setTotalDieselTanks] = useState(0);
     const [totalKeroseneTanks, setTotalKeroseneTanks] = useState(0);
     const [totalPumps, setTotalPumps] = useState(0);
+    const [totalSuperVolume, setTotalSuperVolume] = useState(0);
+    const [totalDieselVolume, setTotalDieselVolume] = useState(0);
+    const [totalKeroseneVolume, setTotalKeroseneVolume] = useState(0);
 
     
 
@@ -48,6 +51,40 @@ const TanksList = () => {
             );
             setTotalVolume(totalVolume);
 
+            // Calculate total super volume
+            const totalSuperVolume = documents.filter(
+                (tank) => tank.fuel_type === "Super"
+            ).reduce(
+                (acc, tank) => acc + tank.current_volume,
+
+                0
+            );
+            setTotalSuperVolume(totalSuperVolume);
+
+            // Calculate total diesel volume
+            const totalDieselVolume = documents.filter(
+
+                (tank) => tank.fuel_type === "Diesel"
+            ).reduce(
+                (acc, tank) => acc + tank.current_volume,
+
+                0
+            );
+            setTotalDieselVolume(totalDieselVolume);
+
+            // Calculate total kerosene volume
+            const totalKeroseneVolume = documents.filter(
+
+                (tank) => tank.fuel_type === "Kerosene" 
+            ).reduce(
+                (acc, tank) => acc + tank.current_volume,
+
+                0
+            );
+            setTotalKeroseneVolume(totalKeroseneVolume);
+
+
+
 
             // Calculate total super tanks
             const totalSuperTanks = documents.filter(
@@ -79,6 +116,8 @@ const TanksList = () => {
                 (acc, tank) => acc + tank.pumps.length,
                 0
             );
+
+       
 
             setTotalPumps(totalPumps);
 
@@ -114,7 +153,7 @@ const TanksList = () => {
         <section class="text-gray-600 body-font">
           <div class="container   ">
             <div class="flex flex-wrap ">
-              <div class="p-4 md:w-1/3">
+              <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
                     <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
@@ -133,7 +172,7 @@ const TanksList = () => {
                   <div class="flex-grow"></div>
                 </div>
               </div>
-              <div class="p-4 md:w-1/3">
+              <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
                     <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
@@ -141,15 +180,72 @@ const TanksList = () => {
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
-                        {totalSuperTanks}
+                        {totalSuperVolume}
                       </h2>
-                      <h2>Total Super Tanks</h2>
+                      <h2>Total Super Volume</h2>
                     </div>
                   </div>
                   <div class="flex-grow"></div>
                 </div>
               </div>
-              <div class="p-4 md:w-1/3 ">
+              <div class="p-4 md:w-1/4">
+                <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
+                  <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsPerson />
+                    </div>
+                    <div>
+                      <h2 class="text-gray-900 text-lg title-font font-medium">
+                        {totalDieselVolume}
+                      </h2>
+                      <h2>Total Diesel Volume</h2>
+                    </div>
+                    {/* <h2 class="text-gray-900 text-lg title-font font-medium">
+                    Neptune
+                  </h2> */}
+                  </div>
+                  <div class="flex-grow"></div>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4">
+                <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
+                  <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsPerson />
+                    </div>
+                    <div>
+                      <h2 class="text-gray-900 text-lg title-font font-medium">
+                        {totalKeroseneVolume}
+                      </h2>
+                      <h2>Total Kerosene Volume</h2>
+                    </div>
+                    {/* <h2 class="text-gray-900 text-lg title-font font-medium">
+                    Neptune
+                  </h2> */}
+                  </div>
+                  <div class="flex-grow"></div>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4">
+                <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
+                  <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsPerson />
+                    </div>
+                    <div>
+                      <h2 class="text-gray-900 text-lg title-font font-medium">
+                        {totalSuperTanks}
+                      </h2>
+                      <h2>Total Super Tanks</h2>
+                    </div>
+                    {/* <h2 class="text-gray-900 text-lg title-font font-medium">
+                    Neptune
+                  </h2> */}
+                  </div>
+                  <div class="flex-grow"></div>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
                     <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
@@ -168,7 +264,7 @@ const TanksList = () => {
                   <div class="flex-grow"></div>
                 </div>
               </div>
-              <div class="p-4 md:w-1/3 ">
+              <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
                     <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
@@ -187,7 +283,7 @@ const TanksList = () => {
                   <div class="flex-grow"></div>
                 </div>
               </div>
-              <div class="p-4 md:w-1/3 ">
+              <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
                     <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
@@ -219,16 +315,11 @@ const TanksList = () => {
 
         <div className="flex justify-between">
           <div className="flex items-center">
-            
             <div>
-              <AddTank/>
-                <button>
-                    
-                </button>
+              <AddTank />
+              <button></button>
             </div>
           </div>
-
-          
 
           <div className="flex items-center">
             <input
@@ -269,9 +360,7 @@ const TanksList = () => {
                   <p className="font-semibold text-black">{tank.name}</p>
                 </td>
                 <td className="px-4 py-3 border">
-                  <p className="font-semibold text-black">
-                    {tank.fuel_type}
-                  </p>
+                  <p className="font-semibold text-black">{tank.fuel_type}</p>
                 </td>
                 <td className="px-4 py-3 border">
                   <p className="font-semibold text-black">
@@ -283,12 +372,12 @@ const TanksList = () => {
                     {tank.last_refilled}
                   </p>
                 </td>
-                 
+
                 <td className="px-4 py-3 border">
-                    <Link href={`/tanks/${tank.id}`}>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                    Details
-                  </button>
+                  <Link href={`/tanks/${tank.id}`}>
+                    <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                      Details
+                    </button>
                   </Link>
                 </td>
               </tr>

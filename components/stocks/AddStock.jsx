@@ -207,12 +207,12 @@ useEffect(() => {
             <form onSubmit={handleAddStock}>
               <div className="flex items-center justify-">
                 <div className="m-2">
-                  <label htmlFor=""> Current Volume(litres)</label>
+                  <label htmlFor="">Opening Readings(litres)</label>
                   <input
                     min={0}
                     step={0.01}
                     type="number"
-                    placeholder="Tank Current Volume"
+                    placeholder="Opening Reading(litres)"
                     className="border-2 border-gray-300 p-2 rounded-lg w-full"
                     required
                     name="opening_volume"
@@ -231,10 +231,10 @@ useEffect(() => {
                     min={0}
                     step={0.01}
                     type="number"
-                    placeholder="Old Price (per litre)"
+                    placeholder="Price (per litre)"
                     className="border-2 border-gray-300 p-2 rounded-lg w-full"
                     required
-                    name="old_price"
+                    name="price"
                     onChange={(e) =>
                       setStock({
                         ...stock,

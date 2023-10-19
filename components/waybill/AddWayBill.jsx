@@ -28,6 +28,7 @@ const AddWayBill = () => {
   const [open, setOpen] = useState(false);
   const [tanks, setTanks] = useState([]);
   const [loading, setLoading] = useState(false);
+  
 
   const handleOpen = () => setOpen(!open);
   const [user, setUser] = useState(null);
@@ -36,8 +37,18 @@ const AddWayBill = () => {
     //this takes an integer
     fuel_type: "",
     supplier: "",
-    quantity: "",
+   initial_quantity: "",
     profit: "",
+    delivered_quantity: "",
+    receipt: "",
+    truck_number: "",
+    driver: "",
+    phone_number: "",
+    loading_date: "",
+    delivered_date: "",
+    shipping_shortage: "",
+
+
 
 
     cost_litre: "",
@@ -53,57 +64,27 @@ const AddWayBill = () => {
     setUser(user);
   }, []);
 
-  // console.log("this", user);
-
-  // const [tank, setTank] = useState({
-  //   id: nanoid(),
-  //   name: "",
-  //   //this takes an integer
-  //   tank_content: "",
-
-  //   current_volume: "",
-  //   pumps: [],
-
-  //   fuel_type: "",
-  //   station: "",
-  // });
-
-  //fetch all tanks in realtime
-  // const fetchTanks = async () => {
-  //   setLoading(true);
-
-  //   try {
-  //     const q = query(
-  //       collection(db, "tanks"),
-  //       where("station", "==", user?.station_id)
-  //     );
-  //     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  //       const tank = [];
-  //       querySnapshot.forEach((doc) => {
-  //         tank.push({ ...doc.data(), id: doc.id });
-  //       });
-  //       setTanks(tank);
-  //       setLoading(false);
-  //       console.log("Tanks", tank);
-  //     });
-  //     return unsubscribe;
-  //   } catch (error) {
-  //     setLoading(false);
-  //     console.log(error);
-  //   }
-  // };
-
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setTank({ ...tank, [name]: value });
-  // };
-
-  //handle selected category
+ 
 
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
     setPurchase({ ...purchase, [name]: value });
+
+
+
   };
+
+
+  const handleUploadFile = async (e) => {
+    const file = e.target.files[0];
+    const storageRef = storage.ref();
+    const fileRef = storageRef.child(file.name);
+    await fileRef.put(file);
+    const fileUrl = await fileRef.getDownloadURL();
+    setPurchase({ ...purchase, receipt: fileUrl });
+
+  };
+
 
   const handleAddPurchase = async (e) => {
     e.preventDefault();
@@ -114,12 +95,15 @@ const AddWayBill = () => {
         id: purchase.id,
         fuel_type: purchase.fuel_type,
         supplier: purchase.supplier,
-        quantity: purchase.quantity,
+        receipt: purchase.receipt,
+        loading_date: purchase.loading_date,
+        delivered_date: purchase.delivered_date,
+        initial_quantity: purchase.initial_quantity,
+        delivered_quantity: purchase.delivered_quantity,
+        shipping_shortage: parseInt(purchase.initial_quantity - purchase.delivered_quantity),
         cost_litre: purchase.cost_litre,
-        cost_total: purchase.cost_total,
         sell_litre: purchase.sell_litre,
-        cost_total: purchase.cost_litre * purchase.quantity,
-        profit: (purchase.sell_litre - purchase.cost_litre) * purchase.quantity,
+        profit: (purchase.sell_litre - purchase.cost_litre) * purchase.delivered_quantity,
         date: purchase.date,
         station: user?.station_id,
       };
@@ -135,7 +119,18 @@ const AddWayBill = () => {
         //this takes an integer
         fuel_type: "",  
         supplier: "",
-        quantity: "",
+
+        initial_quantity: "",
+        profit: "",
+        delivered_quantity: "",
+        receipt: "",
+        truck_number: "",
+        driver: "",
+        phone_number: "",
+        loading_date: "",
+        delivered_date: "",
+        shipping_shortage: "",
+
         cost_litre: "",
         cost_total: "",
         sell_litre: "",
@@ -159,7 +154,7 @@ const AddWayBill = () => {
             className="bg-blue-600 text-white px-4 py-2 rounded-lg "
             onClick={handleOpen}
           >
-            Add Purchase
+            Add Waybill
           </button>
         </div>
       </div>
@@ -173,137 +168,228 @@ const AddWayBill = () => {
         }}
       >
         <DialogHeader>
-          <h5 className="font-bold text-blue-400">Add Purchase</h5>
+          <h5 className="font-bold text-blue-400">Add Waybill</h5>
         </DialogHeader>
         <DialogBody divider>
           <form onSubmit={handleAddPurchase}>
-            <div className="flex items-center justify-">
-              <div className="m-2">
-                <label htmlFor="">Quantity (litres)</label>
+            {/* <div className="">
+              <label class="block text-sm font-medium ">Upload Receipt</label>
+              <div class="mt-1 flex justify-center px-6 pt-2 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                <div class="space-y-1 text-center">
+                  
+                  <div class="flex text-sm text-gray-600">
+                    <label
+                      for="file-upload"
+                      class="relative cursor-pointer rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500"
+                    >
+                      <span class="">Upload a file</span>
+                      <input
+                        id="file-upload"
+                        name="file-upload"
+                        type="file"
+                        class="sr-only"
+                        onChange={handleUploadFile}
+
+                        value={purchase.receipt}
+
+                         
+                      />
+                    </label>
+                    <p class="pl-1">or drag and drop</p>
+                  </div>
+                </div>
+              </div>
+            </div> */}
+
+            <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-3">
+              <div>
+                <label class="text-gray-700 dark:text-gray-200" for="username">
+                  Driver's name
+                </label>
                 <input
+                  value={purchase.driver}
+                  id="username"
+                  type="text"
+                  name="driver"
+                  className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  onChange={
+                    (e) => setPurchase({ ...purchase, driver: e.target.value })
+                    // handleInputChange(e)
+                  }
+                />
+              </div>
+
+              <div>
+                <label
+                  class="text-gray-700 dark:text-gray-200"
+                  for="emailAddress"
+                >
+                  Truck number
+                </label>
+                <input
+                  value={purchase.truck_number}
+                  id="emailAddress"
+                  type="text"
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  name="truck_number"
+                  onChange={(e) =>
+                    setPurchase({ ...purchase, truck_number: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-3">
+              <div>
+                <label class="" for="password">
+                  Driver's Phone
+                </label>
+                <input
+                  id="contact"
+                  type="text"
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  name="phone_number"
+                  value={purchase.phone_number}
+                  onChange={(e) =>
+                    setPurchase({ ...purchase, phone_number: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <label class="" for="">
+                  Supplier
+                </label>
+                <select
+                  class="block w-full px-4 py-3 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  onChange={handleSelectChange}
+                  name="supplier"
+                >
+                  <option disabled>Select Supplier</option>
+                  <option value={"OMC"}>OMC</option>
+                  <option value={"BOST"}>BOST</option>
+                </select>
+              </div>
+              <div>
+                <label class="" for="">
+                  Fuel Type
+                </label>
+                <select
+                  onChange={handleSelectChange}
+                  name="fuel_type"
+                  class="block w-full px-4 py-3 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                >
+                  <option disabled value={" "}>Select Fuel Type</option>
+                  <option value={"Super"}>Super</option>
+                  <option value={"Diesel"}>Diesel</option>
+                  <option value={"Kerosene"}>Kerosene</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="initial_quantity">Loading Quantity (litres)</label>
+                <input
+                  id=""
+                  type="number"
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                   min={0}
                   step={0.01}
-                  type="number"
                   placeholder="Quantity (litres)"
-                  className="border-2 border-gray-300 p-2 rounded-lg w-full"
-                  required
-                  name="quantity"
+                  value={purchase.initial_quantity}
                   onChange={(e) =>
                     setPurchase({
                       ...purchase,
-                      quantity: parseFloat(e.target.value),
+                      initial_quantity: parseFloat(e.target.value),
                     })
                   }
-                  value={purchase.quantity}
                 />
               </div>
-              <div className="m-2">
-                <label htmlFor="">Price (per litre)</label>
+              <div>
+                <label for="">
+                  Delivered Quantity(litres)
+                </label>
                 <input
                   min={0}
                   step={0.01}
+                  placeholder="Quantity (litres)"
+                  id="quantity"
+                  onChange={(e) =>
+                    setPurchase({
+                      ...purchase,
+                      delivered_quantity: parseFloat(e.target.value),
+                    })
+                  }
+                  value={purchase.delivered_quantity}
                   type="number"
-                  placeholder="Price (per litre)"
-                  className="border-2 border-gray-300 p-2 rounded-lg w-full"
-                  required
-                  name="cost_litre"
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                />
+              </div>
+              <div>
+                <label for="loading">Loading Date</label>
+                <input
+                  id="loading"
+                  type="date"
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  value={purchase.loading_date}
+                  onChange={(e) =>
+                    setPurchase({ ...purchase, loading_date: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <label for="delivered">Delivered Date</label>
+                <input
+                  id="delivery_date"
+                  type="date"
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  value={purchase.delivered_date}
+                  onChange={(e) =>
+                    setPurchase({ ...purchase, delivered_date: e.target.value })
+                  }
+                />
+              </div>
+
+              <div>
+                <label for="">Cost per litre(Ghc)</label>
+                <input
+                  id="cost_litre"
+                  min={0}
+                  step={0.01}
+                  type="number"
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  value={purchase.cost_litre}
                   onChange={(e) =>
                     setPurchase({
                       ...purchase,
                       cost_litre: parseFloat(e.target.value),
                     })
                   }
-                  value={purchase.cost_litre}
                 />
               </div>
-            </div>
-            <div className="flex items-center justify-">
-              <div className="m-2">
-                <label htmlFor="">Selling Price (per litre)</label>
+              <div>
+                <label for="">
+                  Selling price Per litre
+                </label>
                 <input
                   min={0}
                   step={0.01}
+                  id="cost_litre"
                   type="number"
-                  placeholder="Selling Price (per litre)"
-                  className="border-2 border-gray-300 p-2 rounded-lg w-full"
-                  name="sell_litre"
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  value={purchase.sell_litre}
                   onChange={(e) =>
                     setPurchase({
                       ...purchase,
-
                       sell_litre: parseFloat(e.target.value),
                     })
                   }
-                  value={purchase.sell_litre}
-                />
-              </div>
-              <div className="m-2">
-                <label htmlFor="">Date</label>
-                <input
-                  type="date"
-                  placeholder="Date"
-                  className="border-2 border-gray-300 p-2 rounded-lg w-full"
-                  name="date"
-                  onChange={(e) =>
-                    setPurchase({ ...purchase, date: e.target.value })
-                  }
-                  value={purchase.date}
                 />
               </div>
             </div>
-            <div className="m-2 flex-col flex">
-              <label htmlFor="">Select 
-               Supplier
-              </label>
-              <select
-                className="w-full py-3 rounded-lg border-2 border-gray-300 px-4"
-                label="Select Supplier"
-                value={purchase.supplier}
-                onChange={handleSelectChange}
-                name="supplier"
-                required
-              >
-                <option value={""} disabled>
-                  Select Supplier
-                </option>
-                <option value={"MOC"}>
-                  MOC
-                </option>
-                <option value={"BOST"}>
-                  BOST
-                </option>
-              </select>
-            </div>
-
-            <div className="m-2 flex-col flex">
-              <label htmlFor="">Select 
-                Fuel Type
-              </label>
-              <select
-                className="w-full py-3 rounded-lg border-2 border-gray-300 px-4"
-                label="Select Fuel Type"
-                value={purchase.fuel_type}
-                onChange={handleSelectChange}
-                name="fuel_type"
-                required
-              >
-                <option value={""} disabled>
-                  Select Fuel Type
-                </option>
-                <option value={"Diesel"}>Diesel</option>
-                <option value={"Super"}>
-                  Super
-                </option>
-                <option value={"Kerosene"}>Kerosene</option>
-              </select>
-            </div>
-
-            <div className="flex justify-between m-4 py-8">
-              <button
-                className="bg-blue-400 text-white px-6 py-2 rounded-xl hover:bg-blue-gray-500 w-full"
-                type="submit"
-              >
-                <span>Submit</span>
+            <div className="w-full h-full flex justify-center my-8">
+              <button className=" py-4 w-full bg-green-500 text-white hover:bg-green-600 font-bold text-lg rounded-md">
+                Submit
               </button>
             </div>
           </form>

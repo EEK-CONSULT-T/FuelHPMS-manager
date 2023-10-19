@@ -35,11 +35,9 @@ export default function Home() {
       <main className="bg-gray-100 min-h-screen w-full">
         <Header />
         <Cards />
-        <div className="p-4 grid md:grid-cols-3 grid-cols-1 gap-4">
-          {/* <Progrssings />
-          <Recordings /> */}
+        <div className="p-4 grid md:grid-cols-1 grid-cols-1 gap-4 my-8">
+           <Progrssings />
         </div>
-        {/* <Report /> */}
       </main>
     </>
   );

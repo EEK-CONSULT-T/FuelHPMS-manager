@@ -2,7 +2,7 @@ import { db } from "@/firebase/config";
 import { collection, getDocs, onSnapshot, query, where } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { BsCashCoin } from "react-icons/bs";
-import { FaBell, FaCalendar, FaUser, FaUsers } from "react-icons/fa";
+import { FaBell, FaCalendar, FaGasPump, FaUser, FaUsers, FaWallet } from "react-icons/fa";
 
 const Cards = () => {
   const [totalexpenditure , setTotalexpenditure] = useState(0);
@@ -233,7 +233,7 @@ const fetchExpenditure = async () => {
         <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex items-center">
             <div className=" flex items-center m-2 rounded-lg">
-              <BsCashCoin size={60} className="p-4   text-gray-600" />
+              <BsCashCoin size={60} className="p-4   text-yellow-800" />
             </div>
             <div className="flex flex-col w-full ">
               <p className="text-2xl font-bold">
@@ -272,33 +272,22 @@ const fetchExpenditure = async () => {
         <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex items-center rounded">
             <div className=" flex items-center m-2 rounded-lg">
-              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
+              <FaWallet size={60} className="p-4 text-blue-400 rounded-md " />
             </div>
             <div className="flex flex-col w-full ">
               <p className="text-2xl font-bold">2000 Ghc</p>
               <p className="text-gray-600">
-                Net Sales
+                Total Sales
               </p>
             </div>
           </div>
         </div>
+
+       
         <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
           <div className="flex items-center rounded">
             <div className=" flex items-center m-2 rounded-lg">
-              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
-            </div>
-            <div className="flex flex-col w-full ">
-              <p className="text-2xl font-bold">2000 Ghc</p>
-              <p className="text-gray-600">
-                Gross Profit
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
-          <div className="flex items-center rounded">
-            <div className=" flex items-center m-2 rounded-lg">
-              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
+              <FaGasPump size={60} className="p-4 text-red-400 rounded-md " />
             </div>
             <div className="flex flex-col w-full ">
               <p className="text-2xl font-bold">2000 litres</p>
@@ -306,50 +295,9 @@ const fetchExpenditure = async () => {
             </div>
           </div>
         </div>
-        <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
-          <div className="flex items-center rounded">
-            <div className=" flex items-center m-2 rounded-lg">
-              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
-            </div>
-            <div className="flex flex-col w-full ">
-              <p className="text-2xl font-bold">2000 litres</p>
-              <p className="text-gray-600">Total Stocks</p>
-            </div>
-          </div>
-        </div>
-        <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
-          <div className="flex items-center rounded">
-            <div className=" flex items-center m-2 rounded-lg">
-              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
-            </div>
-            <div className="flex flex-col w-full ">
-              <p className="text-2xl font-bold">2000 litres</p>
-              <p className="text-gray-600">Total Stocks</p>
-            </div>
-          </div>
-        </div>
-        <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
-          <div className="flex items-center rounded">
-            <div className=" flex items-center m-2 rounded-lg">
-              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
-            </div>
-            <div className="flex flex-col w-full ">
-              <p className="text-2xl font-bold">2000 litres</p>
-              <p className="text-gray-600">Total Stocks</p>
-            </div>
-          </div>
-        </div>
-        <div className="lg:col-span-1 col-span-1 bg-white flex justify-between w-full border p-4 rounded-lg">
-          <div className="flex items-center rounded">
-            <div className=" flex items-center m-2 rounded-lg">
-              <FaUsers size={60} className="p-4 text-gray-400 rounded-md " />
-            </div>
-            <div className="flex flex-col w-full ">
-              <p className="text-2xl font-bold">2000 litres</p>
-              <p className="text-gray-600">Total Stocks</p>
-            </div>
-          </div>
-        </div>
+       
+        
+       
       </div>
     </div>
   );

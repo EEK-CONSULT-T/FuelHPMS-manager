@@ -282,7 +282,7 @@ export default function Sidebar({ children }) {
                 Tanks
               </ListItem>
             </Link>
-            <Link href="/Stocks">
+            <Link href="/Sales">
               <ListItem>
                 <ListItemPrefix>
                   <UserCircleIcon className="h-5 w-5" />
@@ -295,7 +295,15 @@ export default function Sidebar({ children }) {
                 <ListItemPrefix>
                   <UserCircleIcon className="h-5 w-5" />
                 </ListItemPrefix>
-                Purchases 
+                Purchases
+              </ListItem>
+            </Link>
+            <Link href="/Payroll">
+              <ListItem>
+                <ListItemPrefix>
+                  <UserCircleIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                HRM
               </ListItem>
             </Link>
             <Link href="/Expenses">

@@ -1,155 +1,27 @@
-import React, { useEffect, useState } from 'react'
-import AddTank from '../stocks/AddTanks';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
-import { db } from '@/firebase/config';
-import { BsCashCoin, BsFuelPumpDiesel, BsPerson } from 'react-icons/bs';
-import Link from 'next/link';
-import { GiFuelTank } from 'react-icons/gi';
+import React, { useEffect, useState } from "react";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { db } from "@/firebase/config";
+import { BsCashCoin, BsFuelPumpDiesel, BsPerson } from "react-icons/bs";
+import Link from "next/link";
 
-const TanksList = () => {
-    const [tanks, setTanks] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const [totalVolume, setTotalVolume] = useState(0);
-    const [totalSuperTanks, setTotalSuperTanks] = useState(0);
-    const [totalDieselTanks, setTotalDieselTanks] = useState(0);
-    const [totalKeroseneTanks, setTotalKeroseneTanks] = useState(0);
-    const [totalPumps, setTotalPumps] = useState(0);
-    const [totalSuperVolume, setTotalSuperVolume] = useState(0);
-    const [totalDieselVolume, setTotalDieselVolume] = useState(0);
-    const [totalKeroseneVolume, setTotalKeroseneVolume] = useState(0);
+const Sales = () => {
+  const [tanks, setTanks] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [totalVolume, setTotalVolume] = useState(0);
+  const [totalSuperTanks, setTotalSuperTanks] = useState(0);
+  const [totalDieselTanks, setTotalDieselTanks] = useState(0);
+  const [totalKeroseneTanks, setTotalKeroseneTanks] = useState(0);
+  const [totalPumps, setTotalPumps] = useState(0);
+  const [totalSuperVolume, setTotalSuperVolume] = useState(0);
+  const [totalDieselVolume, setTotalDieselVolume] = useState(0);
+  const [totalKeroseneVolume, setTotalKeroseneVolume] = useState(0);
 
-    
-
-   // const fetchTanks = async () => {
-        
-
-  const fetchTanks = async () => {
-    try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const stationId = user?.station_id; // Assuming station_id is stored in the user object
-
-      console.log("stationId", stationId);
-
-      if (stationId) {
-        // Fetch all expenses for the station in realtime using onSnapshot
-        const q = query(
-          collection(db, "tanks"),
-          where("station", "==", stationId)
-        );
-        const unsubscribe = onSnapshot(q, (querySnapshot) => {
-          const documents = [];
-          querySnapshot.forEach((doc) => {
-            documents.push({ ...doc.data(), id: doc.id });
-          });
-          setTanks(documents);
-          console.log("Tanks", documents);
-
-          // Calculate total volume
-            const totalVolume = documents.reduce(
-                (acc, tank) => acc + tank.current_volume,
-                0
-            );
-            setTotalVolume(totalVolume);
-
-            // Calculate total super volume
-            const totalSuperVolume = documents.filter(
-                (tank) => tank.fuel_type === "Super"
-            ).reduce(
-                (acc, tank) => acc + tank.current_volume,
-
-                0
-            );
-            setTotalSuperVolume(totalSuperVolume);
-
-            // Calculate total diesel volume
-            const totalDieselVolume = documents.filter(
-
-                (tank) => tank.fuel_type === "Diesel"
-            ).reduce(
-                (acc, tank) => acc + tank.current_volume,
-
-                0
-            );
-            setTotalDieselVolume(totalDieselVolume);
-
-            // Calculate total kerosene volume
-            const totalKeroseneVolume = documents.filter(
-
-                (tank) => tank.fuel_type === "Kerosene" 
-            ).reduce(
-                (acc, tank) => acc + tank.current_volume,
-
-                0
-            );
-            setTotalKeroseneVolume(totalKeroseneVolume);
-
-
-
-
-            // Calculate total super tanks
-            const totalSuperTanks = documents.filter(
-                (tank) => tank.fuel_type === "Super"
-            ).length;
-
-            setTotalSuperTanks(totalSuperTanks);
-            
-            // Calculate total diesel tanks
-
-            const totalDieselTanks = documents.filter(
-                (tank) => tank.fuel_type === "Diesel"
-            ).length;
-
-            // Calculate total kerosene tanks
-
-            const totalKeroseneTanks = documents.filter(
-                (tank) => tank.fuel_type === "Kerosene"
-            ).length;
-
-
-            setTotalDieselTanks(totalDieselTanks);
-
-            setTotalKeroseneTanks(totalKeroseneTanks);
-
-            // Calculate total pumps
-
-            const totalPumps = documents.reduce(
-                (acc, tank) => acc + tank.pumps.length,
-                0
-            );
-
-       
-
-            setTotalPumps(totalPumps);
-
-        });
-
-        return () => {
-          // Unsubscribe from the listener when the component unmounts
-          unsubscribe();
-        };
-      }
-
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching tanks", error);
-      setLoading(false);
-    }
-  };
-
-    useEffect(() => {
-        fetchTanks();
-    },
-
-
-     []);
-
-
-
-
+  // const fetchTanks = async () => {
 
   return (
-    <>
+    <div>
+
       <div>
         <section class="text-gray-600 body-font">
           <div class="container   ">
@@ -157,8 +29,8 @@ const TanksList = () => {
               <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
-                    <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full  text-blue-400 flex-shrink-0">
-                      <BsFuelPumpDiesel size={40} />
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsFuelPumpDiesel />
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
@@ -176,8 +48,8 @@ const TanksList = () => {
               <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
-                    <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full  text-red-500 flex-shrink-0">
-                      <BsFuelPumpDiesel size={40} />
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsCashCoin />
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
@@ -192,8 +64,8 @@ const TanksList = () => {
               <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
-                    <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-green-500  flex-shrink-0">
-                      <BsFuelPumpDiesel size={40} />
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsPerson />
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
@@ -211,8 +83,8 @@ const TanksList = () => {
               <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
-                    <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full   flex-shrink-0">
-                      <BsFuelPumpDiesel size={40} />
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsPerson />
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
@@ -230,8 +102,8 @@ const TanksList = () => {
               <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
-                    <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-blue-500  flex-shrink-0">
-                      <GiFuelTank size={40} />
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsPerson />
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
@@ -249,8 +121,8 @@ const TanksList = () => {
               <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
-                    <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-green-500  flex-shrink-0">
-                      <GiFuelTank size={40} />
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsPerson />
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
@@ -268,8 +140,8 @@ const TanksList = () => {
               <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
-                    <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-red-500  flex-shrink-0">
-                      <GiFuelTank size={40} />
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsPerson />
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
@@ -277,12 +149,15 @@ const TanksList = () => {
                       </h2>
                       <h2>Total Kerosene Tanks</h2>
                     </div>
+                    {/* <h2 class="text-gray-900 text-lg title-font font-medium">
+                    Neptune
+                  </h2> */}
                   </div>
                   <div class="flex-grow"></div>
                 </div>
               </div>
               <div class="p-4 md:w-1/4">
-                {/*<div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
+                <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
                     <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
                       <BsPerson />
@@ -293,12 +168,12 @@ const TanksList = () => {
                       </h2>
                       <h2>Total Pumps</h2>
                     </div>
-                     <h2 class="text-gray-900 text-lg title-font font-medium">
+                    {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> 
+                  </h2> */}
                   </div>
                   <div class="flex-grow"></div>
-                </div> */}
+                </div>
               </div>
             </div>
           </div>
@@ -314,26 +189,10 @@ const TanksList = () => {
         <div className="flex justify-between">
           <div className="flex items-center">
             <div>
-              <AddTank />
+              <button></button>
             </div>
           </div>
-          {/* <div className="flex flex-col">
-            <label htmlFor="category" className="py-1">
-              Filter by supplier
-            </label>
-            <select
-              className="border-2 px-4 py-2 rounded-lg"
-             // value={selectedSupplier}
-             // onChange={(e) => setSelectedSupplier(e.target.value)}
-            >
-              <option value="" disabled>
-                Filter by supplier
-              </option>
-              <option value="">All</option>
-              <option value="MOC">MOC</option>
-              <option value="BOST">BOST</option>
-            </select>
-          </div> */}
+
           <div className="flex items-center">
             <input
               type="text"
@@ -398,8 +257,7 @@ const TanksList = () => {
           </tbody>
         </table>
       </div>
-    </>
-  );
-}
+    </div>  );
+};
 
-export default TanksList
+export default Sales

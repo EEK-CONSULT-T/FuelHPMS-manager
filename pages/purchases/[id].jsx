@@ -67,7 +67,7 @@ const PurchaseDetails = () => {
                     </span>
                 </p>
                 <p className="">
-                  {stock.cost_litre} Ghc
+              Ghc    {stock.cost_litre} 
                 </p>
               </div>
               <hr />
@@ -81,7 +81,7 @@ const PurchaseDetails = () => {
                   </span>
                 </p>
                 <p className="">
-                  {stock.sell_litre} Ghc
+             Ghc     {stock.sell_litre} 
                 </p>
               </div>
               <hr />
@@ -95,25 +95,12 @@ const PurchaseDetails = () => {
                   </span>
                 </p>
                 <p className="">
-                  {stock.cost_total} Ghc
+               Ghc   {stock.cost_total}
                 </p>
               </div>
               <hr />
             </div>
-            <div>
-              <hr className="" />
-              <div className="py-8 flex justify-between max-w-xl">
-                <p>
-                  <span className="font-bold text-gray-700">
-                    profit:
-                  </span>
-                </p>
-                <p className="">
-                  {stock.profit} Ghc
-                </p>
-              </div>
-              <hr />
-            </div>
+          
             <div>
               <hr className="" />
               <div className="py-8 flex justify-between max-w-xl">

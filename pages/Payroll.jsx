@@ -35,9 +35,8 @@ import {
 import { db } from "@/firebase/config";
 import toast from "react-hot-toast";
 import { BsCashCoin, BsFuelPumpDiesel, BsPerson } from "react-icons/bs";
-import { GiFuelTank } from "react-icons/gi";
 
-export default function PurchaseList() {
+export default function PayRoll() {
   const [purchases, setPurchases] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -49,8 +48,6 @@ export default function PurchaseList() {
     setOpen(true);
   };
 
-
-  
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [totalDieselQuantity, setTotalDieselQuantity] = useState(0);
   const [totalKeroseneQuantity, setTotalKeroseneQuantity] = useState(0);
@@ -60,22 +57,14 @@ export default function PurchaseList() {
   const [totalKeroseneProfit, setTotalKeroseneProfit] = useState(0);
   const [totalSuperProfit, setTotalSuperProfit] = useState(0);
 
-  const [totalProfit , setTotalProfit] = useState(0);
-
-
-  
-
+  const [totalProfit, setTotalProfit] = useState(0);
 
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-const [filteredPurchases, setFilteredPurchases] = useState([]);
-const [selectedFuelType, setSelectedFuelType] = useState("");
-const [selectedSupplier, setSelectedSupplier] = useState("");
-
-
- 
-    
+  const [filteredPurchases, setFilteredPurchases] = useState([]);
+  const [selectedFuelType, setSelectedFuelType] = useState("");
+  const [selectedSupplier, setSelectedSupplier] = useState("");
 
   const handleDateFromChange = (e) => {
     setDateFrom(e.target.value);
@@ -88,8 +77,6 @@ const [selectedSupplier, setSelectedSupplier] = useState("");
   const handleSearchQueryChange = (e) => {
     setSearchQuery(e.target.value);
   };
-
-
 
   const fetchPurchases = async () => {
     try {
@@ -131,87 +118,88 @@ const [selectedSupplier, setSelectedSupplier] = useState("");
     fetchTotals();
   }, []);
 
-
- const filterPurchases = () => {
-   const filtered = purchases.filter((purchase) => {
-     const fuelTypeMatches =
-       purchase.fuel_type.toLowerCase().includes(searchQuery.toLowerCase()) &&
-       (!selectedFuelType || purchase.fuel_type === selectedFuelType ) &&
+  const filterPurchases = () => {
+    const filtered = purchases.filter((purchase) => {
+      const fuelTypeMatches =
+        purchase.fuel_type.toLowerCase().includes(searchQuery.toLowerCase()) &&
+        (!selectedFuelType || purchase.fuel_type === selectedFuelType) &&
         (!selectedSupplier || purchase.supplier === selectedSupplier);
-     const dateMatches =
-       (!dateFrom || purchase.date >= dateFrom) &&
-       (!dateTo || purchase.date <= dateTo);
-     return fuelTypeMatches && dateMatches;
-   });
-   setFilteredPurchases(filtered);
- };
+      const dateMatches =
+        (!dateFrom || purchase.date >= dateFrom) &&
+        (!dateTo || purchase.date <= dateTo);
+      return fuelTypeMatches && dateMatches;
+    });
+    setFilteredPurchases(filtered);
+  };
 
+  useEffect(() => {
+    filterPurchases(); // Call the filtering function
+  }, [
+    purchases,
+    searchQuery,
+    dateFrom,
+    dateTo,
+    selectedFuelType,
+    selectedSupplier,
+  ]);
 
-useEffect(() => {
-  filterPurchases(); // Call the filtering function
-}, [purchases, searchQuery, dateFrom, dateTo, selectedFuelType, selectedSupplier]);
+  const fetchTotals = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      const stationId = user?.station_id;
 
+      console.log("stationId", stationId);
 
+      if (stationId) {
+        const q = query(
+          collection(db, "purchases"),
+          where("station", "==", stationId)
+        );
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          let totalQuantityValue = 0;
+          let totalDieselQuantityValue = 0;
+          let totalDieselProfitValue = 0;
+          let totalKeroseneQuantityValue = 0;
+          let totalKeroseneProfitValue = 0;
+          let totalSuperQuantityValue = 0;
+          let totalSuperProfitValue = 0;
+          let totalProfitValue = 0; // Define totalProfitValue
 
-const fetchTotals = async () => {
-  try {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const stationId = user?.station_id;
+          querySnapshot.forEach((doc) => {
+            const purchase = doc.data();
+            totalQuantityValue += purchase.quantity || 0;
+            totalProfitValue += purchase.profit || 0;
 
-    console.log("stationId", stationId);
+            if (purchase.fuel_type === "Super") {
+              totalSuperQuantityValue += purchase.quantity || 0;
+              totalSuperProfitValue += purchase.profit || 0;
+            } else if (purchase.fuel_type === "Diesel") {
+              totalDieselProfitValue += purchase.profit || 0;
+              totalDieselQuantityValue += purchase.quantity || 0;
+            } else if (purchase.fuel_type === "Kerosene") {
+              totalKeroseneProfitValue += purchase.profit || 0;
+              totalKeroseneQuantityValue += purchase.quantity || 0;
+            }
+          });
 
-    if (stationId) {
-      const q = query(
-        collection(db, "purchases"),
-        where("station", "==", stationId)
-      );
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        let totalQuantityValue = 0;
-        let totalDieselQuantityValue = 0;
-        let totalDieselProfitValue = 0;
-        let totalKeroseneQuantityValue = 0;
-        let totalKeroseneProfitValue = 0;
-        let totalSuperQuantityValue = 0;
-        let totalSuperProfitValue = 0;
-        let totalProfitValue = 0; // Define totalProfitValue
-
-        querySnapshot.forEach((doc) => {
-          const purchase = doc.data();
-          totalQuantityValue += purchase.quantity || 0;
-          totalProfitValue += purchase.profit || 0;
-
-          if (purchase.fuel_type === "Super") {
-            totalSuperQuantityValue += purchase.quantity || 0;
-            totalSuperProfitValue += purchase.profit || 0;
-          } else if (purchase.fuel_type === "Diesel") {
-            totalDieselProfitValue += purchase.profit || 0;
-            totalDieselQuantityValue += purchase.quantity || 0;
-          } else if (purchase.fuel_type === "Kerosene") {
-            totalKeroseneProfitValue += purchase.profit || 0;
-            totalKeroseneQuantityValue += purchase.quantity || 0;
-          }
+          setTotalQuantity(totalQuantityValue);
+          setTotalProfit(totalProfitValue);
+          setTotalDieselQuantity(totalDieselQuantityValue);
+          setTotalDieselProfit(totalDieselProfitValue);
+          setTotalKeroseneQuantity(totalKeroseneQuantityValue);
+          setTotalKeroseneProfit(totalKeroseneProfitValue);
+          setTotalSuperQuantity(totalSuperQuantityValue);
+          setTotalSuperProfit(totalSuperProfitValue);
         });
 
-        setTotalQuantity(totalQuantityValue);
-        setTotalProfit(totalProfitValue);
-        setTotalDieselQuantity(totalDieselQuantityValue);
-        setTotalDieselProfit(totalDieselProfitValue);
-        setTotalKeroseneQuantity(totalKeroseneQuantityValue);
-        setTotalKeroseneProfit(totalKeroseneProfitValue);
-        setTotalSuperQuantity(totalSuperQuantityValue);
-        setTotalSuperProfit(totalSuperProfitValue);
-      });
-
-      return () => {
-        unsubscribe();
-      };
+        return () => {
+          unsubscribe();
+        };
+      }
+    } catch (error) {
+      console.error("Error fetching totals", error);
     }
-  } catch (error) {
-    console.error("Error fetching totals", error);
-  }
-};
-
-
+  };
 
   const handleDeletePurchase = async (id) => {
     try {
@@ -225,17 +213,19 @@ const fetchTotals = async () => {
   return (
     <>
       <div>
-        <section class="text-gray-600 body-font p-8">
+        {/* <section class="text-gray-600 body-font p-8">
           <div class="container   ">
             <div class="flex flex-wrap ">
               <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
-                    <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full   flex-shrink-0">
-                      <GiFuelTank size={40} />
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsFuelPumpDiesel />
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
+                        {/* {totalAmount} 
+                     
                         {totalQuantity} (litres)
                       </h2>
                       <p class="leading-relaxed text-base">Total Quantity</p>
@@ -244,15 +234,32 @@ const fetchTotals = async () => {
                   <div class="flex-grow"></div>
                 </div>
               </div>
-
               <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
-                    <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-green-500  flex-shrink-0">
-                      <GiFuelTank size={40} />
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsFuelPumpDiesel />
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
+                       
+                        Ghc {totalProfit}
+                      </h2>
+                      <p class="leading-relaxed text-base">Total Profit</p>
+                    </div>
+                  </div>
+                  <div class="flex-grow"></div>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4">
+                <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
+                  <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsFuelPumpDiesel />
+                    </div>
+                    <div>
+                      <h2 class="text-gray-900 text-lg title-font font-medium">
+                     
                         {totalDieselProfit}
                       </h2>
                       <p class="leading-relaxed text-base">
@@ -266,11 +273,12 @@ const fetchTotals = async () => {
               <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
-                    <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-blue-500  flex-shrink-0">
-                      <GiFuelTank size={40} />
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsFuelPumpDiesel />
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
+                   
                         {totalSuperQuantity}
                       </h2>
                       <p class="leading-relaxed text-base">
@@ -281,18 +289,70 @@ const fetchTotals = async () => {
                   <div class="flex-grow"></div>
                 </div>
               </div>
-
               <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
                   <div class="flex items-center mb-3">
-                    <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full   flex-shrink-0 text-red-500">
-                      <GiFuelTank size={40} />
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsFuelPumpDiesel />
+                    </div>
+                    <div>
+                      <h2 class="text-gray-900 text-lg title-font font-medium">
+                     
+                        {totalKeroseneQuantity}
+                      </h2>
+                      <p class="leading-relaxed text-base">
+                        Total Kerosene Quantity (litres)
+                      </p>
+                    </div>
+                  </div>
+                  <div class="flex-grow"></div>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4">
+                <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
+                  <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsCashCoin />
+                    </div>
+                    <div>
+                      <h2 class="text-gray-900 text-lg title-font font-medium">
+                        Ghc {totalSuperProfit}
+                      </h2>
+                      <h2>Total Super Profit</h2>
+                    </div>
+                  </div>
+                  <div class="flex-grow"></div>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4">
+                <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
+                  <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsPerson />
+                    </div>
+                    <div>
+                      <h2 class="text-gray-900 text-lg title-font font-medium">
+                  
+                        GHc {totalDieselProfit}
+                      </h2>
+                      <h2>Total DIesel Profit</h2>
+                    </div>
+                   
+                  </div>
+                  <div class="flex-grow"></div>
+                </div>
+              </div>
+              <div class="p-4 md:w-1/4">
+                <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
+                  <div class="flex items-center mb-3">
+                    <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
+                      <BsPerson />
                     </div>
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
                         {totalKeroseneProfit}
                       </h2>
-                      <h2>Total Kerosene Quantity</h2>
+                      <h2>Total Kerosene Profit</h2>
                     </div>
                   </div>
                   <div class="flex-grow"></div>
@@ -300,13 +360,14 @@ const fetchTotals = async () => {
               </div>
             </div>
           </div>
-
+        </section> */}
+        <div className="">
           <Card className="h-full w-full mx-8">
             <CardHeader floated={false} shadow={false} className="rounded-none">
               <div className="mb-8 flex items-center justify-between gap-8">
                 <div>
                   <Typography variant="h5" color="blue-gray">
-                    Purchases
+                    My Pay Rolls
                   </Typography>
                   <Typography color="gray" className="mt-1 font-normal">
                     See information about all members
@@ -377,6 +438,8 @@ const fetchTotals = async () => {
                 </div>
               </div>
               <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+                <div className="flex items-center gap-2"></div>
+
                 <div className="w-full md:w-72">
                   <Input
                     label="Search Fuel Type"
@@ -387,106 +450,7 @@ const fetchTotals = async () => {
                 </div>
               </div>
             </CardHeader>
-
-            <table className=" mt-4">
-              <thead>
-                <tr className="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
-                  <th className="px-4 py-3">No.</th>
-                  <th className="px-4 py-3">Fuel Type</th>
-                  <th className="px-4 py-3">Supplier</th>
-
-                  <th className="px-4 py-3">Driver Name</th>
-
-                  <th className="px-4 py-3">Initial Quantity(litres)</th>
-                  <th className="px-4 py-3">Delivered Quantity(litres)</th>
-
-                  <th className="px-4 py-3">Cost Per Litre (Ghc)</th>
-
-                  <th className="px-4 py-3">Date</th>
-                  <th className="px-4 py-3">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredPurchases.map((purchase, index) => (
-                  <tr className="text-gray-700" key={purchase.id}>
-                    <td className="px-4 py-3 border">
-                      <div className="flex items-center text-sm">
-                        <div>
-                          <p className="font-semibold text-black">
-                            {index + 1}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-
-                    <td className="px-4 py-3 border">
-                      <p className="font-semibold text-black">
-                        {purchase.fuel_type}
-                      </p>
-                    </td>
-
-                    <td className="px-4 py-3 border">
-                      <p className="font-semibold text-black">
-                        {purchase.supplier}
-                      </p>
-                    </td>
-
-                    <td className="px-4 py-3 border">
-                      <p className="font-semibold text-black">
-                        {purchase.truck_number}
-                      </p>
-                    </td>
-
-                    <td className="px-4 py-3 border">
-                      <p className="font-semibold text-black">
-                        {purchase.driver_name}
-                      </p>
-                    </td>
-
-                    <td className="px-4 py-3 border">
-                      <p className="font-semibold text-black">
-                        {purchase.initial_quantity}
-                      </p>
-                    </td>
-                    <td className="px-4 py-3 border">
-                      <p className="font-semibold text-black">
-                        {purchase.delivered_quantity}
-                      </p>
-                    </td>
-
-                    <td className="px-4 py-3 border">
-                      <p className="font-semibold text-black">
-                        {purchase.cost_litre}
-                      </p>
-                    </td>
-
-                    <td className="px-4 py-3 border">
-                      <p className="font-semibold text-black">
-                        {purchase.date}
-                      </p>
-                    </td>
-
-                    <td className="px-4 py-3 border flex ">
-                      <Link href={`/purchases/${purchase.id}`}>
-                        <button className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                          View Details
-                        </button>
-                      </Link>
-
-                      {/* <button
-
-                        className="bg-red-600 text-white px-4 py-2 rounded-lg ml-4"
-                        onClick={() => handleDeletePurchase(purchase.id)}
-                      >
-                        Delete
-                      </button> */}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {/* <table className="w-full mt-4">
+            <table className="w-full mt-4">
               <thead>
                 <tr className="text-md font-semibold tracking-wide text-left text-gray-900 bg-gray-100 uppercase border-b border-gray-600">
                   <th className="px-4 py-3">No.</th>
@@ -590,8 +554,7 @@ const fetchTotals = async () => {
                   </tr>
                 ))}
               </tbody>
-            </table> */}
-
+            </table>
             <CardFooter className="flex items-center justify-between border-t border-blue-gray-50 p-4">
               <Typography
                 variant="small"
@@ -609,10 +572,8 @@ const fetchTotals = async () => {
                 </Button>
               </div>
             </CardFooter>
-          </Card>
-        </section>
 
-        {/* <Dialog open={open} handler={handleOpen}>
+            {/* <Dialog open={open} handler={handleOpen}>
               <DialogHeader>
                 <Typography color="blue-gray" size="xl">
                   <h2 className="font-bold text-2xl">Update Stock</h2>
@@ -726,6 +687,8 @@ const fetchTotals = async () => {
                 </form>
               </DialogBody>
             </Dialog> */}
+          </Card>
+        </div>
       </div>
     </>
   );

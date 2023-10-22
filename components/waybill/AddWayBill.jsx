@@ -279,7 +279,9 @@ const AddWayBill = () => {
                   name="fuel_type"
                   class="block w-full px-4 py-3 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                 >
-                  <option disabled value={" "}>Select Fuel Type</option>
+                  <option disabled value={" "}>
+                    Select Fuel Type
+                  </option>
                   <option value={"Super"}>Super</option>
                   <option value={"Diesel"}>Diesel</option>
                   <option value={"Kerosene"}>Kerosene</option>
@@ -305,9 +307,7 @@ const AddWayBill = () => {
                 />
               </div>
               <div>
-                <label for="">
-                  Delivered Quantity(litres)
-                </label>
+                <label for="">Delivered Quantity(litres)</label>
                 <input
                   min={0}
                   step={0.01}
@@ -368,9 +368,7 @@ const AddWayBill = () => {
                 />
               </div>
               <div>
-                <label for="">
-                  Selling price Per litre
-                </label>
+                <label for="">Selling price Per litre</label>
                 <input
                   min={0}
                   step={0.01}

@@ -298,14 +298,14 @@ export default function Sidebar({ children }) {
                 Purchases
               </ListItem>
             </Link>
-            <Link href="/Payroll">
+            {/* <Link href="/Payroll">
               <ListItem>
                 <ListItemPrefix>
                   <UserCircleIcon className="h-5 w-5" />
                 </ListItemPrefix>
                 HRM
               </ListItem>
-            </Link>
+            </Link> */}
             <Link href="/Expenses">
               <ListItem>
                 <ListItemPrefix>

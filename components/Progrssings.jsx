@@ -31,20 +31,20 @@ import {
     },
     title: {
       display: true,
-      text: 'Investment Chart',
+      text: 'Sales Chart',
     },
   },
 };
 
 
 
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
+const labels = ["January", "February", "March", "April", "May", "June", "July","August","September","October","November", "December"];
 
 export const data = {
   labels,
   datasets: [
     {
-      label: "Investments",
+      label: "Sales",
       data: [0, 10, 5, 2, 20, 30, 45],
       borderColor: "rgb(255, 99, 132)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
@@ -54,21 +54,34 @@ export const data = {
 };
 
 const Progressings = () => {
-  const [investments, setInvestments] = useState([]);
+  const [sales, setSales] = useState([]);
 
-  
+  const fetchSales = async () => {
+    //fetch sales from firestore  using onspashot
+    try
+    {
 
+    }
+    catch(error)
+    {
+
+    }
+  }
+      
+ 
       
 
   return (
     <>
       <div className="w-full md:col-span-1  relative lg:h-[70vh] h-[50vh] m-auto p-8 border rounded-lg bg-white md:py-16">
         <p>Total 
-        <span className="text-blue-500"> Investment</span>
+        <span className="text-blue-500"> 
+         Sales
+        </span>
         </p>
         <h1 className="text-4xl">
           <span className="text-blue-500">
-            {/* Cedi sign */}Ghc 24,000,000
+             Cedi sign Ghc 24,000,000
           </span>
         </h1>
          <Line options={options} data={data} />

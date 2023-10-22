@@ -21,6 +21,7 @@ import Header from '../components/Header';
 import TopCards from '../components/TopCards';
 import BarChart from '../components/BarChart';
 import RecentOrders from '../components/RecentOrders';
+import Dashboard from '@/components/Dashboard/Dashboard';
 
 export default function Home() {
   return (
@@ -32,12 +33,13 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="bg-gray-100 min-h-screen w-full">
-        <Header />
+      <main className="bg-gray-200 min-h-screen w-full">
+<Dashboard/>
+        {/* <Header />
         <Cards />
         <div className="p-4 grid md:grid-cols-1 grid-cols-1 gap-4 my-8">
            <Progrssings />
-        </div>
+        </div> */}
       </main>
     </>
   );

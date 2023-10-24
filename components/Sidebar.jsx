@@ -182,9 +182,10 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import ProtectedRoute from "./protectedroute";
 import { signOut } from "firebase/auth";
-import { auth } from "@/firebase/config";
+import { auth, db } from "@/firebase/config";
 import { useEffect, useState } from "react";
 import logo from "../assets/images/logo.jpeg"
+import { doc, onSnapshot } from "firebase/firestore";
 
 
 
@@ -196,8 +197,41 @@ export default function Sidebar({ children }) {
   
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
+
     setUser(user);
+    getStation();
   }, []);
+
+
+   const [station, setStation] = useState(null);
+ const getStation = async () => {
+   //get user staion id from local storage
+   const user = JSON.parse(localStorage.getItem("user"));
+   const stationId = user?.station_id;
+   console.log("station id", stationId);
+
+   try {
+     // Assuming you have Firestore initialized as firebase.firestore()
+
+    //fetch station with the same id as the user station id using onsnapshot
+      const docRef = doc(db, "stations", stationId);
+      onSnapshot(docRef, (doc) => {
+        if (doc.exists()) {
+          setStation(doc.data());
+          console.log("Document data:", doc.data());
+        }
+      });
+    } catch (error) {
+      console.log("Error getting document:", error);
+    }
+  };
+
+
+
+
+
+
+
 
   console.log("thise", user?.name);
 
@@ -221,6 +255,7 @@ export default function Sidebar({ children }) {
     return <main className="w-full">{children}</main>;
   }
 
+
   return (
     <ProtectedRoute>
       <div className="flex">
@@ -235,8 +270,9 @@ export default function Sidebar({ children }) {
 
             <div>
               <p>
-                <span className="font-bold text-lg">Welcome</span> {user?.name},
+                <span className="font-bold text-sm">Welcome</span> {user?.name},
               </p>
+              <span className="font-bold text-lg"> {station?.name} station</span>
             </div>
           </div>
           <List>
@@ -271,7 +307,7 @@ export default function Sidebar({ children }) {
                 <ListItemPrefix>
                   <UserCircleIcon className="h-5 w-5" />
                 </ListItemPrefix>
-                Stocks
+                Sales
               </ListItem>
             </Link>
             <Link href="/Tanks">
@@ -282,14 +318,14 @@ export default function Sidebar({ children }) {
                 Tanks
               </ListItem>
             </Link>
-            <Link href="/Sales">
+            {/* <Link href="/Sales">
               <ListItem>
                 <ListItemPrefix>
                   <UserCircleIcon className="h-5 w-5" />
                 </ListItemPrefix>
                 Sales
               </ListItem>
-            </Link>
+            </Link> */}
             <Link href="/Waybill">
               <ListItem>
                 <ListItemPrefix>

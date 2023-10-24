@@ -34,7 +34,9 @@ import {
 } from "firebase/firestore";
 import { db } from "@/firebase/config";
 import toast from "react-hot-toast";
-import { BsCashCoin, BsFuelPumpDiesel, BsPerson } from "react-icons/bs";
+import { BsCashCoin, BsFuelPumpDiesel, BsFullscreen, BsPerson } from "react-icons/bs";
+import { GlassWaterIcon, Volume1Icon } from "lucide-react";
+import { FaGasPump } from "react-icons/fa";
 
 export default function StocksList() {
   const [stocks, setStocks] = useState([]);
@@ -72,8 +74,8 @@ export default function StocksList() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredStocks, setFilteredStocks] = useState([]);
   const [selectedFuelType, setSelectedFuelType] = useState("");
-
-
+  const [date, setDate] = useState("");
+ 
 
   const handleDateFromChange = (e) => {
     setDateFrom(e.target.value);
@@ -141,7 +143,8 @@ useEffect(() => {
   }, [stocks, searchQuery, dateFrom, dateTo, selectedFuelType]);
 
 
-  const sales = selectedStock?.opening_volume - closingVolume;
+  // const sales = selectedStock?.opening_volume - closingVolume;
+  const sales = closingVolume - selectedStock?.opening_volume;
   const amount = sales * selectedStock?.price;
 
   const handleSubmit = async (e) => {
@@ -169,6 +172,13 @@ useEffect(() => {
       console.error("Error updating stock:", error);
     }
   };
+
+  
+  const handleSelectDate = (e) => {
+    setDate(e.target.value);
+
+  };
+
 
 
 
@@ -272,21 +282,26 @@ const filterStocks = () => {
 };
 
 
+
+
+
+
+
   return (
     <>
-      <section class="text-gray-600 body-font">
+      {/* <section class="text-gray-600 body-font">
         <div class="container   ">
           <div class="flex flex-wrap ">
-            <div class="p-4 md:w-1/5">
-              <div class="flex rounded-lg h-32 bg-white p-8 flex-col">
+            <div class="p-4 md:w-1/5 ">
+              <div class="flex shadow-md rounded-lg h-32 bg-white p-8 flex-col">
                 <div class="flex items-center mb-3">
-                  <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                    <BsFuelPumpDiesel />
+                  <div class="w-24 h-24 mr-3 inline-flex items-center justify-center  text-yellow-700 flex-shrink-0">
+                    <BsCashCoin size={40} />
                   </div>
                   <div>
                     <h2 class="text-gray-900 text-lg title-font font-medium">
                       {totalAmount}
-                      {/* {investors.length} */}
+                      {/* {investors.length} 
                     </h2>
                     <p class="leading-relaxed text-base">Total Amount</p>
                   </div>
@@ -295,146 +310,146 @@ const filterStocks = () => {
               </div>
             </div>
             <div class="p-4 md:w-1/5">
-              <div class="flex rounded-lg h-32 bg-white p-8 flex-col">
+              <div class="flex shadow-md rounded-lg h-32 bg-white p-8 flex-col">
                 <div class="flex items-center mb-3">
-                  <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                    <BsCashCoin />
+                  <div class="w-24 h-24 mr-3 inline-flex items-center justify-center  text-green-700 flex-shrink-0">
+                    <GlassWaterIcon size={40} />
                   </div>
                   <div>
                     <h2 class="text-gray-900 text-lg title-font font-medium">
                       {totalSales}
                     </h2>
-                    <h2>Total Sales</h2>
+                    <h2>Total litres</h2>
                   </div>
                 </div>
                 <div class="flex-grow"></div>
               </div>
             </div>
             <div class="p-4 md:w-1/5">
-              <div class="flex rounded-lg h-32 bg-white p-8 flex-col">
+              <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-md">
                 <div class="flex items-center mb-3">
-                  <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                    <BsPerson />
+                  <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-indigo-500  flex-shrink-0">
+                    <FaGasPump size={40} />
                   </div>
                   <div>
                     <h2 class="text-gray-900 text-lg title-font font-medium">
                       {totalSuperSales}
-                      {/* {totalReturns} */}
+                      {/* {totalReturns} 
                     </h2>
                     <h2>Total Super Sales</h2>
                   </div>
                   {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                 </div>
                 <div class="flex-grow"></div>
               </div>
             </div>
             <div class="p-4 md:w-1/5">
-              <div class="flex rounded-lg h-32 bg-white p-8 flex-col">
+              <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-md">
                 <div class="flex items-center mb-3">
-                  <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                    <BsPerson />
+                  <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-green-500  flex-shrink-0">
+                    <FaGasPump size={40} />
                   </div>
                   <div>
                     <h2 class="text-gray-900 text-lg title-font font-medium">
                       {totalDieselSales}
-                      {/* {totalReturns} */}
+                      {/* {totalReturns} 
                     </h2>
                     <h2>Total Diesel Sales</h2>
                   </div>
                   {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                 </div>
                 <div class="flex-grow"></div>
               </div>
             </div>
             <div class="p-4 md:w-1/5">
-              <div class="flex rounded-lg h-32 bg-white p-8 flex-col">
+              <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-md">
                 <div class="flex items-center mb-3">
-                  <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                    <BsPerson />
+                  <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-red-500  flex-shrink-0">
+                    <FaGasPump size={40} />
                   </div>
                   <div>
                     <h2 class="text-gray-900 text-lg title-font font-medium">
                       {totalKeroseneSales}
-                      {/* {totalReturns} */}
+                      {/* {totalReturns} 
                     </h2>
                     <h2>Total Kerosene Sales</h2>
                   </div>
                   {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                 </div>
                 <div class="flex-grow"></div>
               </div>
             </div>
             <div class="p-4 md:w-1/5">
-              <div class="flex rounded-lg h-32 bg-white p-8 flex-col">
+              <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-md">
                 <div class="flex items-center mb-3">
-                  <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                    <BsPerson />
+                  <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full   flex-shrink-0">
+                    <FaGasPump size={40} />
                   </div>
                   <div>
                     <h2 class="text-gray-900 text-lg title-font font-medium">
                       {totalShortage}
-                      {/* {totalReturns} */}
+                      {/* {totalReturns} 
                     </h2>
                     <h2>Total Shortage</h2>
                   </div>
                   {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                 </div>
                 <div class="flex-grow"></div>
               </div>
             </div>
             <div class="p-4 md:w-1/5">
-              <div class="flex rounded-lg h-32 bg-white p-8 flex-col">
+              <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-md">
                 <div class="flex items-center mb-3">
-                  <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                    <BsPerson />
+                  <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-indigo-500  flex-shrink-0">
+                    <FaGasPump size={40} />
                   </div>
                   <div>
                     <h2 class="text-gray-900 text-lg title-font font-medium">
                       {superTotalAmount}
-                      {/* {totalReturns} */}
+                      {/* {totalReturns} 
                     </h2>
                     <h2>Total Super Amount</h2>
                   </div>
                   {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                 </div>
                 <div class="flex-grow"></div>
               </div>
             </div>
             <div class="p-4 md:w-1/5">
-              <div class="flex rounded-lg h-32 bg-white p-8 flex-col">
+              <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-md">
                 <div class="flex items-center mb-3">
-                  <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                    <BsPerson />
+                  <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-blue-500  flex-shrink-0">
+                    <FaGasPump size={40} />
                   </div>
                   <div>
                     <h2 class="text-gray-900 text-lg title-font font-medium">
                       {dieselTotalAmount}
-                      {/* {totalReturns} */}
+                      {/* {totalReturns} 
                     </h2>
                     <h2>Total Diesel Amount</h2>
                   </div>
                   {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                 </div>
                 <div class="flex-grow"></div>
               </div>
             </div>
             <div class="p-4 md:w-1/5">
-              <div class="flex rounded-lg h-32 bg-white p-8 flex-col">
+              <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-md">
                 <div class="flex items-center mb-3">
-                  <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                    <BsPerson />
+                  <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-green-500  flex-shrink-0">
+                    <FaGasPump size={40} />
                   </div>
                   <div>
                     <h2 class="text-gray-900 text-lg title-font font-medium">
@@ -444,56 +459,56 @@ const filterStocks = () => {
                   </div>
                   {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                 </div>
                 <div class="flex-grow"></div>
               </div>
             </div>
             <div class="p-4 md:w-1/5">
-              <div class="flex rounded-lg h-32 bg-white p-8 flex-col">
+              <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-md">
                 <div class="flex items-center mb-3">
-                  <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                    <BsPerson />
+                  <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-red-500  flex-shrink-0">
+                    <FaGasPump size={40} />
                   </div>
                   <div>
                     <h2 class="text-gray-900 text-lg title-font font-medium">
                       {totalSuperShortage}
-                      {/* {totalReturns} */}
+                      {/* {totalReturns}
                     </h2>
                     <h2>Total Super Shortage</h2>
                   </div>
                   {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                 </div>
                 <div class="flex-grow"></div>
               </div>
             </div>
             <div class="p-4 md:w-1/5">
-              <div class="flex rounded-lg h-32 bg-white p-8 flex-col">
+              <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-md">
                 <div class="flex items-center mb-3">
-                  <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                    <BsPerson />
+                  <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-yellow-700  flex-shrink-0">
+                    <FaGasPump size={40} />
                   </div>
                   <div>
                     <h2 class="text-gray-900 text-lg title-font font-medium">
-                      {/* {totalReturns} */}
+                      {/* {totalReturns} 
                       {totalDieselShortage}
                     </h2>
                     <h2>Total Diesel Shortage</h2>
                   </div>
                   {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2>
                 </div>
                 <div class="flex-grow"></div>
               </div>
             </div>
             <div class="p-4 md:w-1/5">
-              <div class="flex rounded-lg h-32 bg-white p-8 flex-col">
+              <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-md">
                 <div class="flex items-center mb-3">
-                  <div class="w-8 h-8 mr-3 inline-flex items-center justify-center rounded-full bg-indigo-500 text-white flex-shrink-0">
-                    <BsPerson />
+                  <div class="w-24 h-24 mr-3 inline-flex items-center justify-center rounded-full text-blue-500  flex-shrink-0">
+                    <FaGasPump size={40} />
                   </div>
                   <div>
                     <h2 class="text-gray-900 text-lg title-font font-medium">
@@ -507,17 +522,17 @@ const filterStocks = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <Card className="h-full w-full mx-8">
         <CardHeader floated={false} shadow={false} className="rounded-none">
           <div className="mb-8 flex items-center justify-between gap-8">
             <div>
               <Typography variant="h5" color="blue-gray">
-                Stocks List
+                Sales
               </Typography>
               <Typography color="gray" className="mt-1 font-normal">
-                See information about all members
+                See information about all sales
               </Typography>
 
               <div className="flex gap-4">
@@ -559,9 +574,25 @@ const filterStocks = () => {
                     <option value="Diesel">Diesel</option>
                     <option value="Kerosene">Kerosene</option>
                   </select>
+                </div>
 
+                <div className="flex flex-col items-center">
+                  <label htmlFor="category" className="py-1 ">
+                    Sort by date
+                  </label>
+                  <select
+                    name="date"
+                    id="date"
+                    className="border-2 px-4 py-2 rounded-lg"
+                    value={date}
+                    onChange={handleSelectDate}
+                  >
+                    <option value="Day">Day</option>
+                    <option value="Week">Week</option>
+                    <option value="Month">Month</option>
 
-
+                    <option value="Year">Year</option>
+                  </select>
                 </div>
               </div>
             </div>

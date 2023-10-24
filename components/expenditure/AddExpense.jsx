@@ -177,6 +177,9 @@ const AddExpense = () => {
                   <option value="Rent">Rent</option>
                   <option value="Office Supplies">Office Supplies</option>
                   <option value="Internet">Internet</option>
+                  <option value="MoMo Charges">
+                    MoMo Charges
+                  </option>
 
                   <option value="Transportation">Transportation</option>
                   <option value="ECG Bills">ECG Bills</option>

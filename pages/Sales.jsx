@@ -23,7 +23,7 @@ const Sales = () => {
     <div>
 
       <div>
-        <section class="text-gray-600 body-font">
+        {/* <section class="text-gray-600 body-font">
           <div class="container   ">
             <div class="flex flex-wrap ">
               <div class="p-4 md:w-1/4">
@@ -35,7 +35,7 @@ const Sales = () => {
                     <div>
                       <h2 class="text-gray-900 text-lg title-font font-medium">
                         {totalVolume}
-                        {/* {investors.length} */}
+                        {/* {investors.length} 
                       </h2>
                       <p class="leading-relaxed text-base">
                         Current Total Volume
@@ -75,7 +75,7 @@ const Sales = () => {
                     </div>
                     {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                   </div>
                   <div class="flex-grow"></div>
                 </div>
@@ -94,7 +94,7 @@ const Sales = () => {
                     </div>
                     {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                   </div>
                   <div class="flex-grow"></div>
                 </div>
@@ -113,7 +113,7 @@ const Sales = () => {
                     </div>
                     {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2>
                   </div>
                   <div class="flex-grow"></div>
                 </div>
@@ -132,7 +132,7 @@ const Sales = () => {
                     </div>
                     {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                   </div>
                   <div class="flex-grow"></div>
                 </div>
@@ -151,7 +151,7 @@ const Sales = () => {
                     </div>
                     {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                   </div>
                   <div class="flex-grow"></div>
                 </div>
@@ -170,14 +170,14 @@ const Sales = () => {
                     </div>
                     {/* <h2 class="text-gray-900 text-lg title-font font-medium">
                     Neptune
-                  </h2> */}
+                  </h2> 
                   </div>
                   <div class="flex-grow"></div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
       <div className="p-4 rounded-lg bg-white m-4">
         <h1 className="font-bold text-xl">Tanks List</h1>

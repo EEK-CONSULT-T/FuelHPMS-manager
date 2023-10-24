@@ -55,7 +55,7 @@ export const data = {
   datasets: [
     {
       label: "Sales",
-      data: [0, 10, 5, 2, 20, 30, 45],
+      data: salesData,
       borderColor: "rgb(255, 99, 132)",
       backgroundColor: "rgba(255, 99, 132, 0.5)",
     },
@@ -66,25 +66,26 @@ const SalesChart = () => {
   const [salesData , setSalesData] = useState([]);
 
  const fetchChartData = async () => {
-      try {
-        const givingsColRef = collection(db, "stocks");
+   try{
 
-        //use onsnapshot to listen to changes in the database
+    const salesRef = collection(db, "stocks");
+    //fetch with onsnapshot the sales of the current year and the total sales of the current year
+    const salesSnapshot = await getDocs(salesRef);
+    const salesList = salesSnapshot.docs.map((doc) => doc.data());
+    console.log(salesList);
+    setSalesData(salesList);
 
-        onSnapshot(givingsColRef, (snapshot) => {
-          const sales = snapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }));
-          setSalesData(sales);
-        }
-        );
 
-      } catch (error) {
-        console.log(error);
-      }
 
-  };
+
+
+   }
+    catch(error){
+      console.log(error);
+
+  
+    }
+  }
 
   useEffect(() => {
     fetchChartData();

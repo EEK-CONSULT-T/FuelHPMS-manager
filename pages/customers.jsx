@@ -276,7 +276,7 @@ const Customers = () => {
           <div className="mb-8 flex items-center justify-between gap-8">
             <div>
               <Typography variant="h5" color="blue-gray">
-              Manage Employees
+                Manage Employees
               </Typography>
               <Typography color="gray" className="mt-1 font-normal">
                 See information about all employees
@@ -284,16 +284,22 @@ const Customers = () => {
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row ">
               <AddEmployee />
-
-              <AddEmployee />
             </div>
           </div>
 
-          <div className="w-full md:w-72">
-            <Input
-              label="Search"
-              icon={<MagnifyingGlassIcon className="h-5 w-5" />}
-            />
+          <div className="flex w-full  ">
+            <div className="w-full md:w-72">
+              <Input
+                label="Search"
+                icon={<MagnifyingGlassIcon className="h-5 w-5" />}
+              />
+            </div>
+
+            <div className="">
+              <button className="px-6 py-1">
+                Download <FaFileDownload size={30} />
+              </button>
+            </div>
           </div>
         </CardHeader>
         <CardBody className="overflow-scroll px-0">

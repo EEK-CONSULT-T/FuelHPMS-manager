@@ -226,7 +226,7 @@ const fetchTotals = async () => {
     <>
       <div>
         <section class="text-gray-600 body-font p-8">
-          <div class="container   ">
+          {/* <div class="container   ">
             <div class="flex flex-wrap ">
               <div class="p-4 md:w-1/4">
                 <div class="flex rounded-lg h-32 bg-white p-8 flex-col shadow-lg">
@@ -299,7 +299,7 @@ const fetchTotals = async () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
           <Card className="h-full w-full mx-8">
             <CardHeader floated={false} shadow={false} className="rounded-none">

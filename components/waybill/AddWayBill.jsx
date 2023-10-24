@@ -45,8 +45,11 @@ const AddWayBill = () => {
     driver: "",
     phone_number: "",
     loading_date: "",
+    loading_location:"",
     delivered_date: "",
     shipping_shortage: "",
+    overage:"",
+    
 
 
 
@@ -237,6 +240,25 @@ const AddWayBill = () => {
                   }
                 />
               </div>
+
+              <div>
+                <label
+                  class="text-gray-700 dark:text-gray-200"
+                  for="emailAddress"
+                >
+                  Truck number
+                </label>
+                <input
+                  value={purchase.truck_number}
+                  id="emailAddress"
+                  type="text"
+                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  name="truck_number"
+                  onChange={(e) =>
+                    setPurchase({ ...purchase, truck_number: e.target.value })
+                  }
+                />
+              </div>
             </div>
 
             <div class="grid grid-cols-1 gap-6 mt-4 sm:grid-cols-3">
@@ -258,18 +280,20 @@ const AddWayBill = () => {
 
               <div>
                 <label class="" for="">
-                  Supplier
+                  Supplier Name
                 </label>
-                <select
-                  class="block w-full px-4 py-3 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-                  onChange={handleSelectChange}
-                  name="supplier"
-                >
-                  <option disabled>Select Supplier</option>
-                  <option value={"OMC"}>OMC</option>
-                  <option value={"BOST"}>BOST</option>
-                </select>
+                <input
+                  value={purchase.supplier}
+                  id="username"
+                  type="text"
+                  name="driver"
+                  className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  onChange={(e) =>
+                    setPurchase({ ...purchase, supplier: e.target.value })
+                  }
+                />
               </div>
+
               <div>
                 <label class="" for="">
                   Fuel Type
@@ -288,7 +312,7 @@ const AddWayBill = () => {
                 </select>
               </div>
 
-              <div>
+              {/* <div>
                 <label for="initial_quantity">Loading Quantity (litres)</label>
                 <input
                   id=""
@@ -304,6 +328,52 @@ const AddWayBill = () => {
                       initial_quantity: parseFloat(e.target.value),
                     })
                   }
+                />
+              </div> */}
+
+              <div>
+                <label class="" for="">
+                  Loading Quantity (litres)
+                </label>
+                <select
+                  onChange={handleSelectChange}
+                  name="initial_quantity"
+                  class="block w-full px-4 py-3 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                >
+                  <option disabled value={" "}>
+                    Select Loading Quantity
+                  </option>
+                  <option value={"54000"}>54000</option>
+
+                  <option value={"45000"}>45000</option>
+
+                  <option value={"36000"}>36000</option>
+
+                  <option value={"27000"}>27000</option>
+
+                  <option value={"18000"}>18000</option>
+
+                  <option value={"13500"}>13500</option>
+
+                  <option value={"9000"}>9000</option>
+
+                  <option value={"4500"}>4500</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="" for="">
+                  Loading location
+                </label>
+                <input
+                  value=''
+                  id="username"
+                  type="text"
+                  name="driver"
+                  className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  // onChange={(e) =>
+                  //   setPurchase({ ...purchase, supplier: e.target.value })
+                  // }
                 />
               </div>
               <div>
@@ -367,7 +437,7 @@ const AddWayBill = () => {
                   }
                 />
               </div>
-              <div>
+              {/* <div>
                 <label for="">Selling price Per litre</label>
                 <input
                   min={0}
@@ -383,7 +453,7 @@ const AddWayBill = () => {
                     })
                   }
                 />
-              </div>
+              </div> */}
             </div>
             <div className="w-full h-full flex justify-center my-8">
               <button className=" py-4 w-full bg-green-500 text-white hover:bg-green-600 font-bold text-lg rounded-md">

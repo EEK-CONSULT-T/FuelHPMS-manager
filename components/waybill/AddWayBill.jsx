@@ -37,34 +37,36 @@ const AddWayBill = () => {
     //this takes an integer
     fuel_type: "",
     supplier: "",
-   initial_quantity: "",
-    profit: "",
-    delivered_quantity: "",
-    receipt: "",
+    loading_date: "",
+    initial_quantity: 0,
+    delivered_quantity: 0,
+    shipping_shortage: 0,
+    cost_litre: 0,
+    sell_litre: 0,
+    profit: 0,
+    date: "",
+    station: "",
+    location: "",
     truck_number: "",
     driver: "",
     phone_number: "",
-    loading_date: "",
-    loading_location:"",
-    delivered_date: "",
-    shipping_shortage: "",
-    overage:"",
-    
+    overage: 0,
+    receipt: "",
+    cost_total: 0,
 
 
 
 
-    cost_litre: "",
-    cost_total: "",
-    sell_litre: "",
-    date: "",
-    station: "",
-    amount: 0,
+
+
+
   });
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
+
     setUser(user);
+
   }, []);
 
  
@@ -77,17 +79,29 @@ const AddWayBill = () => {
 
   };
 
+  let overage = 0;
+  if (purchase.delivered_quantity > purchase.initial_quantity) {
+    overage = parseInt(
+      purchase.delivered_quantity - purchase.initial_quantity
+    ).toFixed(2);
 
-  const handleUploadFile = async (e) => {
-    const file = e.target.files[0];
-    const storageRef = storage.ref();
-    const fileRef = storageRef.child(file.name);
-    await fileRef.put(file);
-    const fileUrl = await fileRef.getDownloadURL();
-    setPurchase({ ...purchase, receipt: fileUrl });
+    parseInt(overage).toFixed(2);
+  } else {
+    overage = 0;
+  }
 
-  };
+  let shipping_shortage = 0;
+  if (purchase.delivered_quantity < purchase.initial_quantity) {
+    shipping_shortage = parseInt(
+      purchase.initial_quantity - purchase.delivered_quantity
+    ).toFixed(2);
+  } else {
+    shipping_shortage = 0;
+  }
 
+
+
+ 
 
   const handleAddPurchase = async (e) => {
     e.preventDefault();
@@ -98,17 +112,25 @@ const AddWayBill = () => {
         id: purchase.id,
         fuel_type: purchase.fuel_type,
         supplier: purchase.supplier,
-        receipt: purchase.receipt,
         loading_date: purchase.loading_date,
-        delivered_date: purchase.delivered_date,
-        initial_quantity: purchase.initial_quantity,
+        initial_quantity: parseInt(purchase.initial_quantity, 10),
         delivered_quantity: purchase.delivered_quantity,
-        shipping_shortage: parseInt(purchase.initial_quantity - purchase.delivered_quantity),
+        shipping_shortage: parseFloat(shipping_shortage).toFixed(2),
         cost_litre: purchase.cost_litre,
         sell_litre: purchase.sell_litre,
-        profit: (purchase.sell_litre - purchase.cost_litre) * purchase.delivered_quantity,
+        profit: parseFloat(
+          (purchase.sell_litre - purchase.cost_litre) *
+            purchase.delivered_quantity
+        ),
         date: purchase.date,
         station: user?.station_id,
+        location: purchase.location,
+        truck_number: purchase.truck_number,
+        driver: purchase.driver,
+        phone_number: purchase.phone_number,
+        overage: parseFloat(overage),
+        receipt: purchase.receipt,
+        cost_total: purchase.delivered_quantity * purchase.cost_litre,
       };
 
       await setDoc(docRef, purchaseData);
@@ -120,26 +142,26 @@ const AddWayBill = () => {
       setPurchase({
         id: nanoid(),
         //this takes an integer
-        fuel_type: "",  
+        fuel_type: "",
         supplier: "",
-
-        initial_quantity: "",
-        profit: "",
-        delivered_quantity: "",
-        receipt: "",
+        loading_date: "",
+        initial_quantity: 0,
+        delivered_quantity: 0,
+        shipping_shortage: 0,
+        cost_litre: 0,
+        sell_litre: 0,
+        profit: 0,
+        date: "",
+        station: "",
+        location: "",
         truck_number: "",
         driver: "",
         phone_number: "",
-        loading_date: "",
-        delivered_date: "",
-        shipping_shortage: "",
-
-        cost_litre: "",
-        cost_total: "",
-        sell_litre: "",
-        date: "",
-        station: "",
+        overage: 0,
+        receipt: "",
+        cost_total: 0,
       });
+
     } catch (error) {
       console.log(error);
       alert(error.message);
@@ -217,7 +239,8 @@ const AddWayBill = () => {
                   className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                   onChange={
                     (e) => setPurchase({ ...purchase, driver: e.target.value })
-                    // handleInputChange(e)
+
+                    // setPurchase({ ...purchase, driver: e.target.value })
                   }
                 />
               </div>
@@ -246,16 +269,16 @@ const AddWayBill = () => {
                   class="text-gray-700 dark:text-gray-200"
                   for="emailAddress"
                 >
-                  Truck number
+                  Location
                 </label>
                 <input
-                  value={purchase.truck_number}
+                  value={purchase.location}
                   id="emailAddress"
                   type="text"
                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-                  name="truck_number"
+                  name="location"
                   onChange={(e) =>
-                    setPurchase({ ...purchase, truck_number: e.target.value })
+                    setPurchase({ ...purchase, location: e.target.value })
                   }
                 />
               </div>
@@ -312,25 +335,6 @@ const AddWayBill = () => {
                 </select>
               </div>
 
-              {/* <div>
-                <label for="initial_quantity">Loading Quantity (litres)</label>
-                <input
-                  id=""
-                  type="number"
-                  class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-                  min={0}
-                  step={0.01}
-                  placeholder="Quantity (litres)"
-                  value={purchase.initial_quantity}
-                  onChange={(e) =>
-                    setPurchase({
-                      ...purchase,
-                      initial_quantity: parseFloat(e.target.value),
-                    })
-                  }
-                />
-              </div> */}
-
               <div>
                 <label class="" for="">
                   Loading Quantity (litres)
@@ -339,43 +343,30 @@ const AddWayBill = () => {
                   onChange={handleSelectChange}
                   name="initial_quantity"
                   class="block w-full px-4 py-3 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
+                  type="number"
+                  value={parseInt(purchase.initial_quantity)}
                 >
-                  <option disabled value={" "}>
+                  <option disabled value={0}>
                     Select Loading Quantity
                   </option>
-                  <option value={"54000"}>54000</option>
+                  <option value={54000}>54000</option>
 
-                  <option value={"45000"}>45000</option>
+                  <option value={45000}>45000</option>
 
-                  <option value={"36000"}>36000</option>
+                  <option value={36000}>36000</option>
 
-                  <option value={"27000"}>27000</option>
+                  <option value={27000}>27000</option>
 
-                  <option value={"18000"}>18000</option>
+                  <option value={1800}>18000</option>
 
-                  <option value={"13500"}>13500</option>
+                  <option value={13500}>13500</option>
 
-                  <option value={"9000"}>9000</option>
+                  <option value={9000}>9000</option>
 
-                  <option value={"4500"}>4500</option>
+                  <option value={4500}>4500</option>
                 </select>
               </div>
 
-              <div>
-                <label class="" for="">
-                  Loading location
-                </label>
-                <input
-                  value=''
-                  id="username"
-                  type="text"
-                  name="driver"
-                  className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-                  // onChange={(e) =>
-                  //   setPurchase({ ...purchase, supplier: e.target.value })
-                  // }
-                />
-              </div>
               <div>
                 <label for="">Delivered Quantity(litres)</label>
                 <input
@@ -410,12 +401,13 @@ const AddWayBill = () => {
               <div>
                 <label for="delivered">Delivered Date</label>
                 <input
-                  id="delivery_date"
+                  id="delivered_date"
                   type="date"
+                  name="date"
                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
-                  value={purchase.delivered_date}
+                  value={purchase.date}
                   onChange={(e) =>
-                    setPurchase({ ...purchase, delivered_date: e.target.value })
+                    setPurchase({ ...purchase, date: e.target.value })
                   }
                 />
               </div>
@@ -432,28 +424,28 @@ const AddWayBill = () => {
                   onChange={(e) =>
                     setPurchase({
                       ...purchase,
-                      cost_litre: parseFloat(e.target.value),
+                      cost_litre: parseFloat(e.target.value)
                     })
                   }
                 />
               </div>
-              {/* <div>
-                <label for="">Selling price Per litre</label>
+              <div>
+                <label for="">Sell per litre(Ghc)</label>
                 <input
+                  id="sell_litre"
                   min={0}
                   step={0.01}
-                  id="cost_litre"
                   type="number"
                   class="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-500 dark:focus:border-blue-500 focus:outline-none focus:ring"
                   value={purchase.sell_litre}
                   onChange={(e) =>
                     setPurchase({
                       ...purchase,
-                      sell_litre: parseFloat(e.target.value),
+                      sell_litre:parseFloat(e.target.value),
                     })
                   }
                 />
-              </div> */}
+              </div>
             </div>
             <div className="w-full h-full flex justify-center my-8">
               <button className=" py-4 w-full bg-green-500 text-white hover:bg-green-600 font-bold text-lg rounded-md">

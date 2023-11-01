@@ -170,6 +170,12 @@ import {
   Avatar,
 } from "@material-tailwind/react";
 import {
+  Accordion,
+  AccordionHeader,
+  AccordionBody,
+} from "@material-tailwind/react";
+
+import {
   PresentationChartBarIcon,
   ShoppingBagIcon,
   UserCircleIcon,
@@ -177,7 +183,7 @@ import {
   InboxIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
-import { BsCashCoin } from "react-icons/bs";
+import { BsCartCheck, BsCashCoin, BsPeople } from "react-icons/bs";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import ProtectedRoute from "./protectedroute";
@@ -186,6 +192,9 @@ import { auth, db } from "@/firebase/config";
 import { useEffect, useState } from "react";
 import logo from "../assets/images/logo.jpeg"
 import { doc, onSnapshot } from "firebase/firestore";
+import { ChevronDownIcon, ChevronRightIcon } from "lucide-react";
+import AddGroup from "./groups/AddGroup";
+import { GiExpense, GiFuelTank, GiTankTop } from "react-icons/gi";
 
 
 
@@ -250,6 +259,13 @@ export default function Sidebar({ children }) {
       });
   };
 
+   const [open, setOpen] = useState(0);
+
+
+   const handleOpen = (value) => {
+     setOpen(open === value ? 0 : value);
+   };
+
   const excludeSidebar = router.pathname === "/Login" || router.pathname === "/Forgot";
   if (excludeSidebar) {
     return <main className="w-full">{children}</main>;
@@ -272,7 +288,10 @@ export default function Sidebar({ children }) {
               <p>
                 <span className="font-bold text-sm">Welcome</span> {user?.name},
               </p>
-              <span className="font-bold text-lg"> {station?.name} station</span>
+              <span className="font-bold text-lg">
+                {" "}
+                {station?.name} station
+              </span>
             </div>
           </div>
           <List>
@@ -287,25 +306,17 @@ export default function Sidebar({ children }) {
             <Link href="/customers">
               <ListItem>
                 <ListItemPrefix>
-                  <InboxIcon className="h-5 w-5" />
+                  <BsPeople className="h-5 w-5" />
                 </ListItemPrefix>
                 Employees
-                <ListItemSuffix>
-                  {/* <Chip
-              value="14"
-              size="sm"
-              variant="ghost"
-              color="blue-gray"
-              className="rounded-full"
-            /> */}
-                </ListItemSuffix>
+                <ListItemSuffix></ListItemSuffix>
               </ListItem>
             </Link>
 
             <Link href="/Stocks">
               <ListItem>
                 <ListItemPrefix>
-                  <UserCircleIcon className="h-5 w-5" />
+                  <BsCashCoin className="h-5 w-5" />
                 </ListItemPrefix>
                 Sales
               </ListItem>
@@ -313,7 +324,7 @@ export default function Sidebar({ children }) {
             <Link href="/Tanks">
               <ListItem>
                 <ListItemPrefix>
-                  <UserCircleIcon className="h-5 w-5" />
+                  <GiFuelTank className="h-5 w-5" />
                 </ListItemPrefix>
                 Tanks
               </ListItem>
@@ -329,7 +340,7 @@ export default function Sidebar({ children }) {
             <Link href="/Waybill">
               <ListItem>
                 <ListItemPrefix>
-                  <UserCircleIcon className="h-5 w-5" />
+                  <BsCartCheck className="h-5 w-5" />
                 </ListItemPrefix>
                 Purchases
               </ListItem>
@@ -345,11 +356,99 @@ export default function Sidebar({ children }) {
             <Link href="/Expenses">
               <ListItem>
                 <ListItemPrefix>
-                  <UserCircleIcon className="h-5 w-5" />
+                  <GiExpense className="h-5 w-5" />
                 </ListItemPrefix>
                 Expenses
               </ListItem>
             </Link>
+
+            <List>
+              <Accordion
+                open={open === 1}
+                icon={
+                  <ChevronDownIcon
+                    strokeWidth={2.5}
+                    className={`mx-auto h-4 w-4 transition-transform ${
+                      open === 1 ? "rotate-180" : ""
+                    }`}
+                  />
+                }
+              >
+                <AccordionBody className="py-1">
+                  <List className="p-0">
+                    <ListItem>
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Analytics
+                    </ListItem>
+                    <ListItem>
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Reporting
+                    </ListItem>
+                  </List>
+                </AccordionBody>
+              </Accordion>
+
+            <Accordion
+                open={open === 2}
+                icon={
+                  <ChevronDownIcon
+                    strokeWidth={2.5}
+                    className={`mx-auto h-4 w-4 transition-transform ${
+                      open === 2 ? "rotate-180" : ""
+                    }`}
+                  />
+                }
+              >
+                <ListItem className="p-0" selected={open === 2}>
+                  <AccordionHeader
+                    onClick={() => handleOpen(2)}
+                    className="border-b-0 p-3"
+                  >
+                    <ListItemPrefix>
+                      <BsCashCoin className="h-5 w-5" />
+                    </ListItemPrefix>
+                    <Typography
+                      color="blue-gray"
+                      className="mr-auto font-normal"
+                    >
+                      Sales
+                    </Typography>
+                  </AccordionHeader>
+                </ListItem>
+                <AccordionBody className="py-1">
+                  <List className="p-0">
+                    {/* <ListItem>
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Profit/Loss
+                    </ListItem> */}
+                    {/* <ListItem>
+                      <ListItemPrefix>
+                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
+                      </ListItemPrefix>
+                      Purchase report{" "}
+                    </ListItem> */}
+                    <ListItem>
+                      <ListItemPrefix>
+                      </ListItemPrefix>
+                    Cash Sales
+                    </ListItem>
+                    <Link href="/CreditSales">
+                    <ListItem>
+                      <ListItemPrefix>
+                      </ListItemPrefix>
+                      Credit Sales
+                    </ListItem>
+                    </Link>
+                  </List>
+                </AccordionBody>
+              </Accordion> 
+            </List>
 
             <ListItem onClick={handleLogout}>
               <ListItemPrefix>

@@ -1,61 +1,39 @@
-import AddInvestor from "@/components/investment/addInvestor";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import {
   Card,
   CardHeader,
   Input,
   Typography,
   CardBody,
-  Chip,
-  CardFooter,
-  Tabs,
-  TabsHeader,
-  Tab,
-  Avatar,
-  IconButton,
-  Tooltip,
-  Select,
-  Option,
+ 
 } from "@material-tailwind/react";
-import {
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-  Button,
-} from "@material-tailwind/react";
-import Link from "next/link";
+
 
 import { useEffect, useState } from "react";
-import { CSVLink } from "react-csv";
-import { FaFileDownload } from "react-icons/fa";
-import { HiDotsHorizontal, HiDotsVertical } from "react-icons/hi";
-import AddStation from "../stations./addStation";
-import AddExpense from "./AddExpense";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "@/firebase/config";
+import AddCredit from "@/components/credits/AddCredit";
 
-const TABLE_HEAD = ["No.", "Type", "Amount (Ghc)", "Date",];
+const TABLE_HEAD = ["No.", "Fuel Type", " Debt Amount (Ghc)", 'Name',"Phone",  "Date"];
 
 const TABLE_ROWS = [
-    {   
-        index: 1,
-        type: "Fuel",
-        amount: "20000",
-        date: "12/12/2021",
-    },
-    {
-        index: 2,
-        type: "Fuel",
-        amount: "20000",
-        date: "12/12/2021",
-    },
-
+  {
+    index: 1,
+    type: "Fuel",
+    amount: "20000",
+    date: "12/12/2021",
+  },
+  {
+    index: 2,
+    type: "Fuel",
+    amount: "20000",
+    date: "12/12/2021",
+  },
 ];
 
-export default function ExpenseList() {
-  const [expenses, setExpenses] = useState([ ])
+export default function CreditSales() {
+  const [expenses, setExpenses] = useState([]);
+  const [creditor,setCreditor]= useState([]);
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
   const [sortOrder, setSortOrder] = useState("desc");
@@ -63,8 +41,7 @@ export default function ExpenseList() {
   const [totalexpenditure, setTotalexpenditure] = useState(0);
   const [loading, setLoading] = useState(false);
 
-
- //fetching all expenes realtime using onspanshot
+  //fetching all expenes realtime using onspanshot
   const fetchExpenses = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("user"));
@@ -75,7 +52,7 @@ export default function ExpenseList() {
       if (stationId) {
         // Fetch all expenses for the station in realtime using onSnapshot
         const q = query(
-          collection(db, "expenses"),
+          collection(db, "creditors"),
           where("station", "==", stationId)
         );
         const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -107,9 +84,6 @@ export default function ExpenseList() {
     }
   };
 
-
-
-
   const handleDateFromChange = (e) => {
     setDateFrom(e.target.value);
   };
@@ -126,7 +100,6 @@ export default function ExpenseList() {
     setSearchTerm(e.target.value);
   };
 
-
   useEffect(() => {
     fetchExpenses();
   }, []);
@@ -137,10 +110,10 @@ export default function ExpenseList() {
         <div className="mb-8 flex items-center justify-between gap-8">
           <div>
             <Typography variant="h5" color="blue-gray">
-              Expense List
+            Creditors List
             </Typography>
             <Typography color="gray" className="mt-1 font-normal">
-              See information about all stations
+              See information about all creditors
             </Typography>
           </div>
           <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
@@ -153,7 +126,8 @@ export default function ExpenseList() {
                 </button> */}
               </div>
             </div>
-            <AddExpense />
+            <AddCredit/>
+            {/* <AddExpense /> */}
             {/* <Button className="flex items-center gap-3" size="sm">
               <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add member
             </Button> */}
@@ -267,10 +241,8 @@ export default function ExpenseList() {
                 return expense.category
                   .toLowerCase()
                   .includes(searchTerm.toLowerCase());
-              }
-              )
-              .map(({ id, category, amount, date }, index) => {
-
+              })
+              .map(({ id, fuel_type, amount,phone_number, name,date }, index) => {
                 return (
                   <tr key={id}>
                     <td className="border-b border-blue-gray-200 p-4">
@@ -289,30 +261,46 @@ export default function ExpenseList() {
                     <td className="border-b border-blue-gray-200 p-4">
                       <div className="flex flex-col">
                         <Typography
-
                           variant="small"
                           color="blue-gray"
                           className="font-normal opacity-70"
                         >
-                          {category}
-
+                          {fuel_type}
                         </Typography>
                       </div>
                     </td>
 
                     <td className="border-b border-blue-gray-200 p-4">
                       <Typography
-
-                        variant="small" 
+                        variant="small"
                         color="blue-gray"
                         className="font-normal"
                       >
                         {amount}
                       </Typography>
                     </td>
+
                     <td className="border-b border-blue-gray-200 p-4">
                       <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {name}
+                      </Typography>
+                    </td>
+                    <td className="border-b border-blue-gray-200 p-4">
+                      <Typography
+                        variant="small"
+                        color="blue-gray"
+                        className="font-normal"
+                      >
+                        {phone_number}
+                      </Typography>
+                    </td>
 
+                    <td className="border-b border-blue-gray-200 p-4">
+                      <Typography
                         variant="small"
                         color="blue-gray"
                         className="font-normal"
@@ -320,86 +308,12 @@ export default function ExpenseList() {
                         {date}
                       </Typography>
                     </td>
-
-                    </tr>
+                  </tr>
                 );
               })}
           </tbody>
 
-          {/*  <tbody>
-           {TABLE_ROWS.map(({ index, name, location, expenditure, sales }) => {
-              const isLast = index === TABLE_ROWS.length - 1;
-              const classes = isLast
-                ? "p-4"
-                : "p-4 border-b border-blue-gray-50";
-
-              return (
-                <tr key={name}>
-                  <td className={classes}>
-                    <div className="flex items-center gap-3">
-                      <div className="flex flex-col">
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {name}
-                        </Typography>
-                      </div>
-                    </div>
-                  </td>
-                  <td className={classes}>
-                    <div className="flex flex-col">
-                      <Typography
-                        variant="small"
-                        color="blue-gray"
-                        className="font-normal opacity-70"
-                      >
-                        {location}
-                      </Typography>
-                    </div>
-                  </td>
-
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {sales}
-                    </Typography>
-                  </td>
-                  <td className={classes}>
-                    <Typography
-                      variant="small"
-                      color="blue-gray"
-                      className="font-normal"
-                    >
-                      {expenditure}
-                    </Typography>
-                  </td>
-
-                  <td className={classes}>
-                    <Menu>
-                      <MenuList>
-                        <Link href={"/InvestorDetails"}>
-                          <MenuItem>View Details</MenuItem>
-                        </Link>
-
-                        <MenuItem className="text-red-500">Delete</MenuItem>
-                      </MenuList>
-
-                      <MenuHandler>
-                        <IconButton variant="text">
-                          <HiDotsHorizontal className="h-4 w-4" />
-                        </IconButton>
-                      </MenuHandler>
-                    </Menu>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody> */}
+         
         </table>
       </CardBody>
 

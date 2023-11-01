@@ -118,11 +118,11 @@ const handleSelectChange = (e) => {
       const docRef = doc(db, "stocks", stock.id);
       const stockData = {
         id: stock.id,
-        opening_volume: stock.opening_volume,
+        opening_volume: parseInt(stock.opening_volume).toFixed(2),
          fuel_type: stock.fuel_type,
 
         //closing_volume: parseFloat(stock.closing_volume),
-        price: stock.price,
+        price: parseInt(stock.price).toFixed(2),
         pump://store the pump object in the stock
         {
           id: stock.pump,
@@ -187,7 +187,7 @@ useEffect(() => {
               className="bg-blue-600 text-white px-4 py-2 rounded-lg "
               onClick={handleOpen}
             >
-              Add Stock
+              Add Sale
             </button>
           </div>
         </div>
@@ -205,6 +205,11 @@ useEffect(() => {
           </DialogHeader>
           <DialogBody divider>
             <form onSubmit={handleAddStock}>
+
+              <>
+              
+              
+              </>
               <div className="flex items-center justify-">
                 <div className="m-2">
                   <label htmlFor="">Opening Readings(litres)</label>
@@ -365,9 +370,7 @@ useEffect(() => {
                   </option>
                   {tank.pumps.map((pump) => (
                     <>
-                      <option value="" disabled>
-                        Select Pump
-                      </option>
+                      
                       <option key={pump.id} value={pump.id}>
                         {pump.name}
                       </option>

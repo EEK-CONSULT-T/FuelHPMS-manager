@@ -295,11 +295,11 @@ const Customers = () => {
               />
             </div>
 
-            <div className="">
+            {/* <div className="">
               <button className="px-6 py-1">
                 Download <FaFileDownload size={30} />
               </button>
-            </div>
+            </div> */}
           </div>
         </CardHeader>
         <CardBody className="overflow-scroll px-0">

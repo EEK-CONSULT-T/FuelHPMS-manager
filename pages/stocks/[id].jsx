@@ -88,7 +88,12 @@ const StockDetails = () => {
                 <p>
                   <span className="font-bold text-gray-700">Shortage:</span>
                 </p>
-                <p className="">{stock.shortage} Ghc</p>
+                <p className="">
+                  Ghc{" "}
+                  {stock.shortage?.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                  })}
+                </p>
               </div>
               <hr />
             </div>
@@ -108,7 +113,12 @@ const StockDetails = () => {
                 <p>
                   <span className="font-bold text-gray-700">Sales Litres:</span>
                 </p>
-                <p className="">{stock.sales} litres</p>
+                <p className="">
+                  {stock.sales?.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                  })}{" "}
+                  litres
+                </p>
               </div>
               <hr />
             </div>
@@ -128,7 +138,12 @@ const StockDetails = () => {
                 <p>
                   <span className="font-bold text-gray-700">Amount:</span>
                 </p>
-                <p className="">{stock.amount} Ghc</p>
+                <p className="">
+                  Ghc{" "}
+                  {stock.amount?.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                  })}{" "}
+                </p>
               </div>
               <hr />
             </div>

@@ -53,7 +53,6 @@ export default function LoginPage() {
          setLoading(false);
        }
      } catch (error) {
-       console.log(error);
        toast.error(error.message); // Displaying error message
        setLoading(false);
      }

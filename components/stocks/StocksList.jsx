@@ -143,8 +143,8 @@ useEffect(() => {
   }, [stocks, searchQuery, dateFrom, dateTo, selectedFuelType]);
 
 
-  // const sales = selectedStock?.opening_volume - closingVolume;
-  const sales = closingVolume - selectedStock?.opening_volume;
+  const sales = selectedStock?.opening_volume - closingVolume;
+ // const sales = closingVolume - selectedStock?.opening_volume;
   const amount = sales * selectedStock?.price;
 
   const handleSubmit = async (e) => {
@@ -153,12 +153,12 @@ useEffect(() => {
     try {
       const updatedStock = {
         ...selectedStock,
-        closing_volume: parseInt(e.target.closing_volume.value).toFixed(2),
+        closing_volume: Number(e.target.closing_volume.value),
         closing_time: e.target.closing_time.value,
         sales: sales,
-        amount: parseInt(amount).toFixed(2),
-        amount_paid: parseInt(e.target.amount_paid.value).toFixed(2),
-        shortage: amount - parseInt(e.target.amount_paid.value).toFixed(2),
+        amount: Number(amount),
+        amount_paid: Number(e.target.amount_paid.value),
+        shortage: Number(amount) - Number(e.target.amount_paid.value),
       };
 
       const stockRef = doc(db, "stocks", selectedStock.id);
@@ -578,7 +578,7 @@ const filterStocks = () => {
                   </select>
                 </div>
 
-                <div className="flex flex-col items-center">
+                {/* <div className="flex flex-col items-center">
                   <label htmlFor="category" className="py-1 ">
                     Sort by date
                   </label>
@@ -595,7 +595,7 @@ const filterStocks = () => {
 
                     <option value="Year">Year</option>
                   </select>
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
@@ -665,8 +665,9 @@ const filterStocks = () => {
                 </td>
                 <td className="px-4 py-3 border">
                   <p className="font-semibold text-black">
-                    {tank.shortage}
-                  
+                    {tank.shortage.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                    })}
                   </p>
                 </td>
 

@@ -118,26 +118,16 @@ const handleSelectChange = (e) => {
       const docRef = doc(db, "stocks", stock.id);
       const stockData = {
         id: stock.id,
-        opening_volume: parseInt(stock.opening_volume).toFixed(2),
-         fuel_type: stock.fuel_type,
-
-        //closing_volume: parseFloat(stock.closing_volume),
-        price: parseInt(stock.price).toFixed(2),
-        pump://store the pump object in the stock
-        {
+        opening_volume: Number(stock.opening_volume),// Convert to number using parseFloat
+        fuel_type: stock.fuel_type,
+        price: Number(stock.price),
+        pump: {
           id: stock.pump,
           name: tank.pumps.find((pump) => pump.id === stock.pump)?.name,
         },
-        
-
         opening_time: stock.opening_time,
-      //  closing_time: stock.closing_time,
-        date:stock.date,  
+        date: stock.date,
         station: user?.station_id,
-        //sales: (stock.opening_volume - stock.closing_volume),
-       // amount: (stock.opening_volume - stock.closing_volume) * stock.price,
-    
-      
       };
 
       await setDoc(docRef, stockData);
@@ -148,20 +138,16 @@ const handleSelectChange = (e) => {
       //empty fields
       setStock({
         id: nanoid(),
-        //this takes an integer
-        tank: "",
         opening_volume: "",
-        closing_volume: "",
-        price: "",
         fuel_type: "",
+        price: "",
         pump: "",
-        opening_time : "",
-        closing_time: "",
+        opening_time: "",
         date: "",
         station: "",
       });
 
-      //console.log("Document written with ID: ", docRef.id);
+     
     } catch (error) {
       console.log(error);
       alert(error.message);
@@ -180,7 +166,7 @@ useEffect(() => {
     
   return (
     <div>
-      <Fragment>
+      
         <div className="flex justify-between px-4 pt-8">
           <div className="flex items-center">
             <button
@@ -390,7 +376,6 @@ useEffect(() => {
             </form>
           </DialogBody>
         </Dialog>
-      </Fragment>
     </div>
   );
 };

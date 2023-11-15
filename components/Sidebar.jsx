@@ -195,7 +195,7 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { ChevronDownIcon, ChevronRightIcon } from "lucide-react";
 import AddGroup from "./groups/AddGroup";
 import { GiExpense, GiFuelTank, GiTankTop } from "react-icons/gi";
-
+import { RiContactsBook2Fill } from "react-icons/ri";
 
 
 export default function Sidebar({ children }) {
@@ -260,6 +260,14 @@ export default function Sidebar({ children }) {
   };
 
    const [open, setOpen] = useState(0);
+        
+   const [open1, setOpen1] = useState(0);
+
+   const handleOpen1 = (value) => {
+
+      setOpen1(open1 === value ? 0 : value);
+    };
+
 
 
    const handleOpen = (value) => {
@@ -313,6 +321,15 @@ export default function Sidebar({ children }) {
               </ListItem>
             </Link>
 
+            <Link href="/Payroll">
+              <ListItem>
+                <ListItemPrefix>
+                  <RiContactsBook2Fill className="h-5 w-5" />
+                </ListItemPrefix>
+                Payroll
+              </ListItem>
+            </Link>
+
             <Link href="/Stocks">
               <ListItem>
                 <ListItemPrefix>
@@ -329,14 +346,7 @@ export default function Sidebar({ children }) {
                 Tanks
               </ListItem>
             </Link>
-            {/* <Link href="/Sales">
-              <ListItem>
-                <ListItemPrefix>
-                  <UserCircleIcon className="h-5 w-5" />
-                </ListItemPrefix>
-                Sales
-              </ListItem>
-            </Link> */}
+
             <Link href="/Waybill">
               <ListItem>
                 <ListItemPrefix>
@@ -345,14 +355,7 @@ export default function Sidebar({ children }) {
                 Purchases
               </ListItem>
             </Link>
-            {/* <Link href="/Payroll">
-              <ListItem>
-                <ListItemPrefix>
-                  <UserCircleIcon className="h-5 w-5" />
-                </ListItemPrefix>
-                HRM
-              </ListItem>
-            </Link> */}
+
             <Link href="/Expenses">
               <ListItem>
                 <ListItemPrefix>
@@ -392,7 +395,7 @@ export default function Sidebar({ children }) {
                 </AccordionBody>
               </Accordion>
 
-            <Accordion
+              <Accordion
                 open={open === 2}
                 icon={
                   <ChevronDownIcon
@@ -421,35 +424,115 @@ export default function Sidebar({ children }) {
                 </ListItem>
                 <AccordionBody className="py-1">
                   <List className="p-0">
-                    {/* <ListItem>
-                      <ListItemPrefix>
-                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                      </ListItemPrefix>
-                      Profit/Loss
-                    </ListItem> */}
-                    {/* <ListItem>
-                      <ListItemPrefix>
-                        <ChevronRightIcon strokeWidth={3} className="h-3 w-5" />
-                      </ListItemPrefix>
-                      Purchase report{" "}
-                    </ListItem> */}
                     <ListItem>
-                      <ListItemPrefix>
-                      </ListItemPrefix>
-                    Cash Sales
+                      <ListItemPrefix></ListItemPrefix>
+                      Cash Sales
                     </ListItem>
                     <Link href="/CreditSales">
-                    <ListItem>
-                      <ListItemPrefix>
-                      </ListItemPrefix>
-                      Credit Sales
-                    </ListItem>
+                      <ListItem>
+                        <ListItemPrefix></ListItemPrefix>
+                        Credit Sales
+                      </ListItem>
                     </Link>
                   </List>
                 </AccordionBody>
-              </Accordion> 
+              </Accordion>
             </List>
+            <List>
+              <List>
+                <Accordion
+                  open={open1 === 1}
+                  icon={
+                    <ChevronDownIcon
+                      strokeWidth={2.5}
+                      className={`mx-auto h-4 w-4 transition-transform ${
+                        open1 === 1 ? "rotate-180" : ""
+                      }`}
+                    />
+                  }
+                >
+                  <AccordionBody className="py-1">
+                    <List className="p-0">
+                      <ListItem>
+                        <ListItemPrefix>
+                          <ChevronRightIcon
+                            strokeWidth={3}
+                            className="h-3 w-5"
+                          />
+                        </ListItemPrefix>
+                        Analytics
+                      </ListItem>
+                      <ListItem>
+                        <ListItemPrefix>
+                          <ChevronRightIcon
+                            strokeWidth={3}
+                            className="h-3 w-5"
+                          />
+                        </ListItemPrefix>
+                        Reporting
+                      </ListItem>
+                    </List>
+                  </AccordionBody>
+                </Accordion>
 
+                <Accordion
+                  open={open1 === 2}
+                  icon={
+                    <ChevronDownIcon
+                      strokeWidth={2.5}
+                      className={`mx-auto h-4 w-4 transition-transform ${
+                        open1 === 2 ? "rotate-180" : ""
+                      }`}
+                    />
+                  }
+                >
+                  <ListItem className="p-0" selected={open1 === 2}>
+                    <AccordionHeader
+                      onClick={() => handleOpen1(2)}
+                      className="border-b-0 p-3"
+                    >
+                      <ListItemPrefix>
+                        <BsCashCoin className="h-5 w-5" />
+                      </ListItemPrefix>
+                      <Typography
+                        color="blue-gray"
+                        className="mr-auto font-normal"
+                      >
+                        Reports
+                      </Typography>
+                    </AccordionHeader>
+                  </ListItem>
+                  <AccordionBody className="py-1">
+                    <List className="p-0">
+                      <Link href="/ProfitLossReport">
+                        <ListItem>
+                          <ListItemPrefix></ListItemPrefix>
+                          Profit/Loss Report
+                        </ListItem>
+                      </Link>
+                      <Link href="/SalesReport">
+                        <ListItem>
+                          <ListItemPrefix></ListItemPrefix>
+                          Sales Report
+                        </ListItem>
+                      </Link>
+                      <Link href="/PurchaseReport">
+                        <ListItem>
+                          <ListItemPrefix></ListItemPrefix>
+                          Purchase Report
+                        </ListItem>
+                      </Link>
+                      <Link href="/ExpenseReport">
+                        <ListItem>
+                          <ListItemPrefix></ListItemPrefix>
+                          Expense Report
+                        </ListItem>
+                      </Link>
+                    </List>
+                  </AccordionBody>
+                </Accordion>
+              </List>
+            </List>
             <ListItem onClick={handleLogout}>
               <ListItemPrefix>
                 <PowerIcon className="h-5 w-5 text-red-500" />

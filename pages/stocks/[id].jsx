@@ -140,7 +140,7 @@ const StockDetails = () => {
                 </p>
                 <p className="">
                   Ghc{" "}
-                  {stock.amount?.toLocaleString(undefined, {
+                  {stock.amount_paid?.toLocaleString(undefined, {
                     minimumFractionDigits: 2,
                   })}{" "}
                 </p>

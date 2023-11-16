@@ -34,7 +34,7 @@ const AddPayroll = () => {
   const [payroll, setPayroll] = useState({
     id: nanoid(),
     //this takes an integer
-    employee_name: "",
+    employee: "",
     position: "",
     basic_salary: 0,
     overtime: 0,
@@ -58,8 +58,8 @@ const AddPayroll = () => {
   }, []);
 
   const handleSelectChange = (e) => {
-    const { name, value } = e.target;
-    setPurchase({ ...purchase, [name]: value });
+  //  const { name, value } = e.target;
+   // setPurchase({ ...purchase, [name]: value });
   };
 
   const handleAddPayRoll = async (e)=>{
@@ -70,6 +70,11 @@ const AddPayroll = () => {
       const docRef = doc(db, "payrolls", payroll.id);
       const payrollData = {
         id:payroll.id,
+        employee:payroll.employee,
+             
+
+
+              
         
       }
 
